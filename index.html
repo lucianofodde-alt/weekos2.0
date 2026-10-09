@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
-<head>
+<html lang="es" data-theme="light"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>WEEK OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&amp;family=Inter:wght@400;450;500;600&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   box-sizing:border-box;
@@ -136,8 +135,8 @@ input,select{font-family:inherit;color:inherit}
 .capture-hint code{background:var(--panel-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;font-size:11px;color:var(--soft)}
 
 /* ---------- Week grid ---------- */
-.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:22px}
-.daycard{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 13px;min-height:190px;display:flex;flex-direction:column;transition:border .18s}
+.weekgrid{display:grid;grid-template-columns:var(--cols,repeat(7,1fr));gap:12px;margin-top:22px}
+.daycard{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 13px;min-height:190px;display:flex;flex-direction:column;transition:border .18s;position:relative;min-width:0}
 .daycard.today{border-color:var(--ink);border-width:1.5px;box-shadow:0 6px 22px -14px rgba(0,33,71,.4)}
 [data-theme="dark"] .daycard.today{border-color:var(--accent)}
 .daycard.weekend{background:var(--panel-2)}
@@ -161,6 +160,29 @@ input,select{font-family:inherit;color:inherit}
 .tt-pend{color:var(--accent);background:var(--accent-soft)}
 .task .tdel{opacity:0;border:0;background:transparent;color:var(--faint);font-size:13px;padding:0 2px;line-height:1;position:absolute;right:2px;top:3px}
 .task:hover .tdel{opacity:.7}
+.task .tlinkbtn{opacity:0;border:0;background:transparent;color:var(--faint);padding:0 2px;line-height:1;position:absolute;right:16px;top:3px;display:grid;place-items:center}
+.task .tlinkbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.task:hover .tlinkbtn{opacity:.7}
+.task .tlinkbtn:hover{color:var(--accent);opacity:1}
+.task.haslink .tlinkbtn{color:var(--accent)}
+@media(hover:none){.task .tlinkbtn,.task .tdel{opacity:.55}}
+.ttext a,.rt-item .txt a,.mcell .mt a,.wbday li a{color:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:2px;cursor:pointer}
+.ttext a:hover,.rt-item .txt a:hover,.mcell .mt a:hover,.wbday li a:hover{color:var(--accent)}
+.ttext a .ext{font-size:.85em;margin-left:2px;color:var(--accent);text-decoration:none;display:inline-block}
+.colresize{position:absolute;top:10px;bottom:10px;right:-11px;width:10px;cursor:col-resize;z-index:4;touch-action:none;display:flex;align-items:center;justify-content:center}
+.colresize::before{content:"";position:absolute;top:0;bottom:0;left:4px;width:2px;border-radius:2px;background:var(--accent);opacity:0;transition:opacity .15s}
+.colresize::after{content:"";width:4px;height:30px;border-radius:99px;background:var(--line-2);transition:background .15s,height .15s}
+.colresize:hover::before,.colresize.on::before{opacity:.55}
+.colresize:hover::after,.colresize.on::after{background:var(--accent);height:42px}
+body.is-resizing,body.is-resizing *{cursor:col-resize!important;user-select:none!important}
+.rich a::after{content:"↗";font-size:.8em;margin-left:2px;color:var(--accent);display:inline-block;text-decoration:none}
+.linkbar{position:fixed;z-index:95;display:none;align-items:center;gap:4px;background:var(--ink);color:var(--bg);border-radius:10px;padding:4px;box-shadow:0 12px 30px -10px rgba(0,20,44,.5);max-width:calc(100vw - 16px)}
+.linkbar.on{display:flex}
+.linkbar button{border:0;background:transparent;color:var(--bg);font-size:12.5px;font-weight:600;padding:7px 11px;border-radius:7px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.linkbar button:hover{background:color-mix(in srgb,var(--bg) 14%,transparent)}
+.linkbar button svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.linkbar .lb-sel{font-size:12px;color:color-mix(in srgb,var(--bg) 70%,transparent);padding:0 6px 0 8px;white-space:nowrap}
+.linkbar input{width:230px;max-width:52vw;border:0;border-radius:7px;padding:7px 10px;font-size:13px;background:var(--bg);color:var(--ink);outline:none}
 .task .tdel:hover{color:var(--danger);opacity:1}
 .task .tgrip{flex:0 0 auto;width:10px;margin:0 -3px 0 -2px;padding-top:1px;color:var(--faint);font-size:11px;line-height:1;letter-spacing:-2px;cursor:grab;opacity:0;touch-action:none;user-select:none;transition:opacity .15s}
 .task:hover .tgrip{opacity:.8}
@@ -384,6 +406,7 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
 .rt-bhint{font-size:11px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin:3px 0 10px}
 .rt-list{display:flex;flex-direction:column;gap:1px}
 .rt-item{display:flex;gap:10px;align-items:flex-start;padding:6px 5px;border-radius:7px;cursor:pointer;font-size:13.5px;color:var(--ink-2);line-height:1.35;user-select:none}
+.rt-item .txt,.task .rich{user-select:text;-webkit-user-select:text}
 .rt-item:hover{background:var(--panel)}
 .rt-item .rcheck{margin-top:1px}
 .rt-item.done .txt{color:var(--faint);text-decoration:line-through}
@@ -412,7 +435,18 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
 .icobtn:hover{color:var(--ink);border-color:var(--line-2);background:var(--panel)}
 .icobtn.del:hover{color:var(--danger)}
 .icobtn:disabled{opacity:.3;pointer-events:none}
-.ed-item{display:flex;align-items:center;gap:6px;padding:4px 0;border-top:1px solid var(--line)}
+.ed-item{display:flex;align-items:center;gap:6px;padding:4px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.ed-item .icobtn.lnk svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ed-item .icobtn.lnk:hover{color:var(--accent)}
+.ed-links{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;padding:0 6px 6px}
+.ed-link{display:inline-flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line-2);border-radius:999px;padding:3px 4px 3px 10px;font-size:12px}
+.ed-link a{color:var(--ink);font-weight:600;text-decoration:none}
+.ed-link a:hover{color:var(--accent)}
+.ed-link .u{color:var(--faint)}
+.ed-link button{border:0;background:transparent;color:var(--faint);width:20px;height:20px;border-radius:50%;padding:0;font-size:13px;line-height:1}
+.ed-link button:hover{color:var(--danger);background:var(--panel-2)}
+.ed-tip{display:flex;gap:9px;align-items:flex-start;background:var(--accent-soft);border-radius:10px;padding:10px 12px;color:var(--ink-2)}
+.ed-tip svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ed-item:first-child{border-top:0}
 .ed-itext{flex:1;min-width:0;border:0;background:transparent;font-size:13.5px;color:var(--ink);padding:7px 6px;border-radius:6px}
 .ed-itext:focus{background:var(--panel);outline:1px solid var(--line-2)}
@@ -438,6 +472,7 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
   .hb-grid{gap:16px}
   .bv{display:none}
   .weekgrid{grid-template-columns:repeat(2,1fr)}
+  .colresize{display:none}
   .wbgrid{grid-template-columns:repeat(2,1fr)}
   .weekrow-head .wkone{display:none}
 }
@@ -478,10 +513,9 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
         <button id="darkBtn">Oscuro</button>
       </div>
       <div class="iobar">
-        <button class="iobtn" id="downloadHtmlBtn" title="Descargar una copia de esta app (sin tus datos)">Descargar HTML</button>
         <button class="iobtn" id="exportBtn">Exportar</button>
         <button class="iobtn" id="importBtn">Importar</button>
-        <input type="file" id="importFile" accept="application/json" hidden>
+        <input type="file" id="importFile" accept="application/json" hidden="">
       </div>
     </div>
   </header>
@@ -534,6 +568,7 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
         </div>
         <p class="capture-hint">Captura rápida: <code>/l</code> llamada · <code>/j</code> junta · <code>/p</code> pendiente · sin prefijo es tarea</p>
         <p class="capture-hint">Arrastra <code>⋮⋮</code> para ordenar por prioridad o mover a otro día.</p>
+        <p class="capture-hint">Ajusta el ancho de los días con las barritas entre columnas (doble clic las iguala).</p>
       </div>
     </div>
 
@@ -630,13 +665,11 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
   <div class="modal wide" id="rtModal"></div>
 </div>
 
+<div class="linkbar" id="linkbar"></div>
 <div class="toast" id="toast"></div>
 
 <script>
 "use strict";
-/* Copia limpia del HTML, tomada antes de que la app pinte nada:
-   es lo que baja el botón "Descargar HTML". */
-const PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
 /* ============================================================
    WEEK OS — estado + persistencia
    ============================================================ */
@@ -709,12 +742,245 @@ function parseCapture(text){
   if(/^\/p\s+/i.test(t)) return {type:"pend", text:t.replace(/^\/p\s+/i,"")};
   return {type:"task", text:t};
 }
+/* ---------- Links ---------- */
+const URL_RE = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/i;
+function normalizeUrl(u){
+  u=String(u||"").trim();
+  if(!u) return "";
+  if(!/^https?:\/\//i.test(u)) u="https://"+u.replace(/^\/+/,"");
+  try{ const x=new URL(u); if(x.protocol!=="http:" && x.protocol!=="https:") return ""; return x.href; }
+  catch(e){ return ""; }
+}
+function hostOf(u){ try{ return new URL(u).hostname.replace(/^www\./,""); }catch(e){ return u; } }
+/* ------------------------------------------------------------
+   Texto enriquecido: los links se guardan dentro del texto como
+   [texto visible](https://url). También se detectan URLs sueltas.
+   ------------------------------------------------------------ */
+const TOKEN_RE = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi;
+function tokenize(src){
+  src=String(src||""); const out=[]; let last=0, m;
+  TOKEN_RE.lastIndex=0;
+  while((m=TOKEN_RE.exec(src))){
+    if(m.index>last) out.push({type:"text", d:src.slice(last,m.index)});
+    if(m[1]!==undefined){
+      const u=normalizeUrl(m[2]);
+      out.push(u? {type:"link", d:m[1], url:u} : {type:"text", d:m[0]});
+    }else{
+      let raw=m[3]; const trail=(raw.match(/[.,;:!?)\]]+$/)||[""])[0];
+      if(trail) raw=raw.slice(0,-trail.length);
+      const u=normalizeUrl(raw);
+      if(u) out.push({type:"bare", d:hostOf(u), raw, url:u}); else out.push({type:"text", d:raw});
+      if(trail) out.push({type:"text", d:trail});
+    }
+    last=m.index+m[0].length;
+  }
+  if(last<src.length) out.push({type:"text", d:src.slice(last)});
+  return out;
+}
+function plainText(src){ return tokenize(src).map(t=>t.d).join(""); }
+function richText(src){
+  return tokenize(src).map(t=> t.type==="text" ? escapeHtml(t.d)
+    : '<a href="'+escapeAttr(t.url)+'" target="_blank" rel="noopener noreferrer" title="'+escapeAttr(t.url)+'">'+escapeHtml(t.d)+'</a>').join("");
+}
+const linkify = richText;
+function cleanLabel(x){ return String(x).replace(/\[/g,"(").replace(/\]/g,")"); }
+/* reconstruye el texto-fuente de un tramo [a,b) del texto visible */
+function sliceSource(tokens,a,b){
+  let p=0, out="";
+  tokens.forEach(t=>{
+    const e=p+t.d.length, s0=Math.max(a,p), e0=Math.min(b,e);
+    if(t.type==="bare"){ if(p>=a && p<b) out+=t.raw; }
+    else if(s0<e0){
+      const part=t.d.slice(s0-p,e0-p);
+      out+= t.type==="link" ? "["+cleanLabel(part)+"]("+t.url+")" : part;
+    }
+    p=e;
+  });
+  return out;
+}
+/* ajusta la selección para no partir una URL suelta y quitar espacios de los bordes */
+function snapRange(src,a,b){
+  const toks=tokenize(src), disp=toks.map(t=>t.d).join("");
+  let p=0;
+  toks.forEach(t=>{ const e=p+t.d.length; if(t.type==="bare" && a<e && b>p){ a=Math.min(a,p); b=Math.max(b,e); } p=e; });
+  while(a<b && /\s/.test(disp[a])) a++;
+  while(b>a && /\s/.test(disp[b-1])) b--;
+  return [a,b];
+}
+function applyLink(src,a,b,url){
+  const toks=tokenize(src), disp=toks.map(t=>t.d).join("");
+  [a,b]=snapRange(src,a,b);
+  if(a>=b) return src;
+  return sliceSource(toks,0,a)+"["+cleanLabel(disp.slice(a,b))+"]("+url+")"+sliceSource(toks,b,disp.length);
+}
+function removeLinks(src,a,b){
+  let p=0;
+  return tokenize(src).map(t=>{
+    const e=p+t.d.length, hit=a<e && b>p; p=e;
+    if(t.type==="text") return t.d;
+    if(t.type==="link") return hit? t.d : "["+t.d+"]("+t.url+")";
+    return t.raw;
+  }).join("");
+}
+function linksIn(src,a,b){
+  let p=0; const out=[];
+  tokenize(src).forEach(t=>{ const e=p+t.d.length; if(t.type==="link" && a<e && b>p) out.push(t); p=e; });
+  return out;
+}
+/* tareas antiguas guardaban el link aparte (t.url): se pasa al texto */
+function taskSource(t){ return t.url ? "["+cleanLabel(t.text)+"]("+t.url+")" : t.text; }
+function setTaskSource(t,src){ t.text=src; delete t.url; }
+/* las tareas del día van en texto simple (sin links) */
+function taskPlain(t){ return String(t.text||"").replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,"$1"); }
+function taskTextHtml(t){ return escapeHtml(taskPlain(t)); }
+const LINK_SVG='<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>';
+function hasLink(src){ return tokenize(src).some(t=>t.type!=="text"); }
+
+/* ícono 🔗 de una tarea: linkea toda la tarea (o edita/quita su link) */
+function editTaskLink(t){
+  const src=taskSource(t), disp=plainText(src);
+  const cur=tokenize(src).find(x=>x.type!=="text");
+  const v=prompt(cur? "Edita el link (déjalo vacío para quitarlo).\nTip: también puedes seleccionar solo una parte del texto para linkearla." : "Pega el link para esta tarea.\nTip: también puedes seleccionar solo una parte del texto para linkearla.", cur? cur.url : "");
+  if(v===null) return;
+  if(!v.trim()){ setTaskSource(t, removeLinks(src,0,disp.length)); save(); renderSemana(); toast("Link quitado"); return; }
+  const u=normalizeUrl(v);
+  if(!u){ toast("Ese link no es válido"); return; }
+  setTaskSource(t, applyLink(removeLinks(src,0,disp.length),0,disp.length,u)); save(); renderSemana(); toast("Link guardado ✦");
+}
+
 function addTask(dateStr, raw){
-  const {type,text}=parseCapture(raw);
+  let {type,text}=parseCapture(raw);
   if(!text) return;
   state.tasks.push({id:newId(), text, date:dateStr, type, done:false, discarded:false});
   save();
 }
+
+/* ============================================================
+   BARRA PARA LINKEAR UNA SELECCIÓN
+   Selecciona parte del texto de una rutina o de una tarea y
+   aparece "Linkear". Pega la URL y Enter.
+   ============================================================ */
+let lbPending=null, lbMode="idle", lbTimer=null;
+function lbEl(){ return document.getElementById("linkbar"); }
+function findRich(node){
+  const el = node && (node.nodeType===1? node : node.parentElement);
+  return el ? el.closest(".rich[data-kind]") : null;
+}
+function readSelection(){
+  const sel=window.getSelection();
+  if(!sel || sel.rangeCount===0 || sel.isCollapsed) return null;
+  const rich=findRich(sel.anchorNode);
+  if(!rich || rich!==findRich(sel.focusNode)) return null;
+  const range=sel.getRangeAt(0);
+  const pre=document.createRange(); pre.selectNodeContents(rich); pre.setEnd(range.startContainer, range.startOffset);
+  const a=pre.toString().length, b=a+range.toString().length;
+  if(!range.toString().trim()) return null;
+  return {kind:rich.dataset.kind, id:rich.dataset.id, a, b, rect:range.getBoundingClientRect()};
+}
+function getSource(kind,id){
+  if(kind==="rt"){ for(const b of state.routines){ const it=b.items.find(i=>i.id===id); if(it) return it.text; } return null; }
+  const t=state.tasks.find(x=>x.id===id); return t? taskSource(t) : null;
+}
+function setSource(kind,id,src){
+  if(kind==="rt"){ for(const b of state.routines){ const it=b.items.find(i=>i.id===id); if(it){ it.text=src; return; } } return; }
+  const t=state.tasks.find(x=>x.id===id); if(t) setTaskSource(t,src);
+}
+function placeLinkbar(rect){
+  const lb=lbEl();
+  lb.style.left="0px"; lb.style.top="0px"; lb.classList.add("on");
+  const w=lb.offsetWidth, h=lb.offsetHeight;
+  let x=rect.left+rect.width/2-w/2; x=Math.max(8,Math.min(window.innerWidth-w-8,x));
+  let y=rect.top-h-8; if(y<8) y=rect.bottom+8;
+  lb.style.left=x+"px"; lb.style.top=y+"px";
+}
+function hideLinkbar(){ lbMode="idle"; lbPending=null; lbEl().classList.remove("on"); }
+function showLinkButtons(info){
+  lbPending=info; lbMode="buttons";
+  const src=getSource(info.kind,info.id); if(src===null){ hideLinkbar(); return; }
+  const had=linksIn(src,info.a,info.b).length>0;
+  const lb=lbEl();
+  lb.innerHTML='<button data-lb="link">'+LINK_SVG+(had?'Cambiar link':'Linkear')+'</button>'+(had?'<button data-lb="unlink">Quitar link</button>':'');
+  placeLinkbar(info.rect);
+}
+function showLinkInput(){
+  if(!lbPending) return;
+  lbMode="input";
+  const src=getSource(lbPending.kind,lbPending.id);
+  const cur=linksIn(src,lbPending.a,lbPending.b)[0];
+  const sel=plainText(src).slice(lbPending.a,lbPending.b).trim();
+  const lb=lbEl();
+  lb.innerHTML='<span class="lb-sel" title="'+escapeAttr(sel)+'">“'+escapeHtml(sel.length>22?sel.slice(0,21)+"…":sel)+'”</span>'+
+    '<input id="lbInput" placeholder="Pega el link y Enter" autocomplete="off" value="'+escapeAttr(cur?cur.url:"")+'">'+
+    '<button data-lb="ok">OK</button>';
+  placeLinkbar(lbPending.rect);
+  const inp=lb.querySelector("#lbInput"); inp.focus(); inp.select();
+  inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); commitLink(inp.value); } else if(e.key==="Escape"){ e.preventDefault(); hideLinkbar(); } };
+}
+function afterLinkChange(){
+  save(); hideLinkbar();
+  try{ window.getSelection().removeAllRanges(); }catch(_){}
+  renderSemana();
+  if(document.getElementById("rtOverlay").classList.contains("on")) renderRtEditor();
+}
+function commitLink(v){
+  if(!lbPending) return;
+  const u=normalizeUrl(v);
+  if(!u){ toast("Ese link no es válido"); return; }
+  const {kind,id,a,b}=lbPending;
+  const src=getSource(kind,id); if(src===null){ hideLinkbar(); return; }
+  setSource(kind,id, applyLink(removeLinks(src,a,b),a,b,u));
+  afterLinkChange(); toast("Link guardado ✦");
+}
+/* al escribir en el editor se edita el texto visible; los links se
+   conservan sobre las mismas palabras mientras sigan estando */
+function relink(plain, oldSrc){
+  const links=tokenize(oldSrc).filter(t=>t.type!=="text");
+  let out="", pos=0;
+  links.forEach(L=>{
+    const idx=plain.indexOf(L.d,pos);
+    if(idx<0) return;
+    out+=plain.slice(pos,idx)+"["+cleanLabel(L.d)+"]("+L.url+")";
+    pos=idx+L.d.length;
+  });
+  return out+plain.slice(pos);
+}
+function removeLinkIndex(src,k){
+  let n=-1;
+  return tokenize(src).map(t=>{
+    if(t.type==="text") return t.d;
+    n++;
+    if(n===k) return t.d;
+    return t.type==="link"? "["+t.d+"]("+t.url+")" : t.raw;
+  }).join("");
+}
+function unlinkSelection(){
+  if(!lbPending) return;
+  const {kind,id,a,b}=lbPending;
+  const src=getSource(kind,id); if(src===null){ hideLinkbar(); return; }
+  setSource(kind,id, removeLinks(src,a,b));
+  afterLinkChange(); toast("Link quitado");
+}
+function refreshLinkbar(){
+  if(lbMode==="input") return;
+  const info=readSelection();
+  if(info) showLinkButtons(info); else hideLinkbar();
+}
+document.addEventListener("selectionchange",()=>{ clearTimeout(lbTimer); lbTimer=setTimeout(refreshLinkbar,140); });
+document.addEventListener("mousedown",e=>{ if(lbMode==="input" && !e.target.closest("#linkbar")) hideLinkbar(); });
+window.addEventListener("scroll",()=>{ if(lbMode==="buttons") hideLinkbar(); },{passive:true});
+document.addEventListener("DOMContentLoaded",()=>{});
+function bindLinkbar(){
+  const lb=lbEl();
+  lb.addEventListener("mousedown",e=>{ if(e.target.tagName!=="INPUT") e.preventDefault(); });
+  lb.addEventListener("click",e=>{
+    const b=e.target.closest("[data-lb]"); if(!b) return;
+    const a=b.dataset.lb;
+    if(a==="link") showLinkInput();
+    else if(a==="unlink") unlinkSelection();
+    else if(a==="ok") commitLink(lb.querySelector("#lbInput").value);
+  });
+}
+
 function tasksOn(dateStr){ return state.tasks.filter(t=>t.date===dateStr && !t.discarded); }
 function overdueTasks(){
   const td = iso(today());
@@ -811,9 +1077,56 @@ function ensureOne(wk){
 function toggleResult(wk,i){ ensureOne(wk); const r=state.oneThing[wk].results[i]; r.done=!r.done; save(); renderResults(wk); renderSemana(); }
 function setResultText(wk,i,v){ ensureOne(wk); state.oneThing[wk].results[i].text=v; save(); }
 
+/* ============================================================
+   ANCHO DE LOS DÍAS
+   Arrastra la barrita entre dos días para darle más espacio a uno
+   y menos al otro. Se guarda; doble clic vuelve a dejarlos iguales.
+   ============================================================ */
+const MIN_DAY_W = 90;
+function applyDayWidths(){
+  const g=document.getElementById("weekGrid");
+  const w=state.dayWidths;
+  if(Array.isArray(w) && w.length===7 && w.every(x=>typeof x==="number" && x>0))
+    g.style.setProperty("--cols", w.map(x=>x.toFixed(3)+"fr").join(" "));
+  else g.style.removeProperty("--cols");
+}
+function startResize(e,handle,i){
+  if(e.button!==undefined && e.button!==0) return;
+  e.preventDefault(); e.stopPropagation();
+  const grid=document.getElementById("weekGrid");
+  const cards=[...grid.querySelectorAll(".daycard")];
+  const widths=cards.map(c=>c.getBoundingClientRect().width);
+  const pair=widths[i]+widths[i+1];
+  const startX=e.clientX;
+  handle.classList.add("on");
+  document.body.classList.add("is-resizing");
+  try{ handle.setPointerCapture(e.pointerId); }catch(_){}
+  let cur=widths.slice();
+  const move=ev=>{
+    const a=Math.max(MIN_DAY_W, Math.min(pair-MIN_DAY_W, widths[i]+(ev.clientX-startX)));
+    cur=widths.slice(); cur[i]=a; cur[i+1]=pair-a;
+    const avg=cur.reduce((x,y)=>x+y,0)/7;
+    state.dayWidths=cur.map(x=>x/avg);
+    applyDayWidths();
+  };
+  const up=()=>{
+    handle.removeEventListener("pointermove",move);
+    handle.removeEventListener("pointerup",up);
+    handle.removeEventListener("pointercancel",up);
+    handle.classList.remove("on");
+    document.body.classList.remove("is-resizing");
+    save();
+  };
+  handle.addEventListener("pointermove",move);
+  handle.addEventListener("pointerup",up);
+  handle.addEventListener("pointercancel",up);
+}
+function resetDayWidths(){ delete state.dayWidths; save(); applyDayWidths(); toast("Días con el mismo ancho"); }
+
 function renderWeekGrid(mon){
   const grid = document.getElementById("weekGrid");
   grid.innerHTML="";
+  applyDayWidths();
   const td = iso(today());
   for(let i=0;i<7;i++){
     const d = addDays(mon,i);
@@ -837,6 +1150,14 @@ function renderWeekGrid(mon){
       '<div class="dayadd"><input placeholder="+ agregar…" data-date="'+ds+'" autocomplete="off"></div>';
     const ul = card.querySelector(".tasklist");
     tks.forEach(t=>ul.appendChild(taskEl(t)));
+    if(i<6){
+      const h=document.createElement("div");
+      h.className="colresize"; h.dataset.i=i;
+      h.title="Arrastra para ensanchar o achicar · doble clic para igualar";
+      h.addEventListener("pointerdown",e=>startResize(e,h,i));
+      h.addEventListener("dblclick",resetDayWidths);
+      card.appendChild(h);
+    }
     grid.appendChild(card);
   }
   grid.querySelectorAll(".dayadd input").forEach(inp=>{
@@ -1022,7 +1343,7 @@ function renderRoutinePanel(){
     items.forEach(it=>{
       const on=!!log[it.id];
       html+='<div class="rt-item'+(on?" done":"")+'" data-id="'+it.id+'" role="checkbox" aria-checked="'+on+'" tabindex="0">'+
-        '<div class="rcheck'+(on?" on":"")+'">'+CHECK_SVG+'</div><span class="txt">'+escapeHtml(it.text)+'</span></div>';
+        '<div class="rcheck'+(on?" on":"")+'">'+CHECK_SVG+'</div><span class="txt rich" data-kind="rt" data-id="'+it.id+'">'+richText(it.text)+'</span></div>';
     });
     html+='</div>';
     col.innerHTML=html;
@@ -1030,8 +1351,21 @@ function renderRoutinePanel(){
   });
   host.querySelectorAll(".rt-item").forEach(el=>{
     const act=()=>{ toggleRoutine(rtDate, el.dataset.id); renderSemana(); };
-    el.onclick=act;
-    el.onkeydown=e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); act(); } };
+    let pend=null;
+    const selecting=()=>{ const s=window.getSelection(); return s && !s.isCollapsed && el.contains(s.anchorNode); };
+    el.onclick=e=>{
+      if(e.target.closest("a")) return;
+      if(selecting()) return; // está seleccionando texto para linkear
+      if(e.target.closest(".txt")){
+        // clic sobre el texto: espera un instante por si es doble clic para seleccionar
+        clearTimeout(pend);
+        pend=setTimeout(()=>{ if(!selecting()) act(); }, 260);
+        return;
+      }
+      act();
+    };
+    el.ondblclick=()=>{ clearTimeout(pend); };
+    el.onkeydown=e=>{ if(e.target.closest && e.target.closest("a")) return; if(e.key===" "||e.key==="Enter"){ e.preventDefault(); act(); } };
   });
 }
 function shiftRtDate(n){ rtDate=iso(addDays(parseISO(rtDate),n)); cursor=parseISO(rtDate); renderSemana(); }
@@ -1041,6 +1375,14 @@ document.getElementById("rtToday").onclick=()=>{ rtDate=iso(today()); cursor=tod
 document.getElementById("rtEdit").onclick=()=>openRtEditor();
 
 /* ---------- editor de rutinas ---------- */
+function edLinksHtml(src,bi,ii){
+  const links=tokenize(src).filter(t=>t.type!=="text");
+  if(!links.length) return "";
+  return '<div class="ed-links">'+links.map((L,k)=>
+    '<span class="ed-link"><a href="'+escapeAttr(L.url)+'" target="_blank" rel="noopener noreferrer" title="'+escapeAttr(L.url)+'">'+escapeHtml(L.d)+' ↗</a>'+
+    '<span class="u">'+escapeHtml(hostOf(L.url))+'</span>'+
+    '<button data-unl="'+k+'" data-bi="'+bi+'" data-ii="'+ii+'" title="Quitar este link">×</button></span>').join("")+'</div>';
+}
 function openRtEditor(){ document.getElementById("rtOverlay").classList.add("on"); renderRtEditor(); }
 function closeRtEditor(){
   state.routines.forEach(b=>{ b.items=b.items.filter(i=>i.text.trim()); });
@@ -1054,7 +1396,8 @@ function renderRtEditor(focusSel){
   const m=document.getElementById("rtModal");
   const R=state.routines;
   let html='<div class="modal-head"><span class="mt">Editar rutinas</span><button class="mc" id="rtClose">Cerrar</button></div>'+
-    '<p class="ed-intro">Cada bloque agrupa tareas que se repiten. Elige en qué días aparece cada una (L M X J V S D): se mostrarán automáticamente en esos días y se marcan por fecha, sin acumular atrasadas. Los cambios se guardan solos.</p>';
+    '<p class="ed-intro">Cada bloque agrupa tareas que se repiten. Elige en qué días aparece cada una (L M X J V S D): se mostrarán automáticamente en esos días y se marcan por fecha, sin acumular atrasadas. Los cambios se guardan solos.</p>'+
+    '<p class="ed-intro ed-tip">'+LINK_SVG+'<span><b>Links:</b> selecciona una palabra o frase de la tarea y toca el ícono de cadena para pegar el link. Si no seleccionas nada, se linkea la tarea completa. También puedes seleccionar texto directo en el panel de rutinas.</span></p>';
   R.forEach((b,bi)=>{
     html+='<div class="ed-block">'+
       '<div class="ed-bhead">'+
@@ -1066,11 +1409,13 @@ function renderRtEditor(focusSel){
       '</div><div class="ed-items">';
     b.items.forEach((it,ii)=>{
       html+='<div class="ed-item">'+
-        '<input class="ed-itext" data-bi="'+bi+'" data-ii="'+ii+'" value="'+escapeAttr(it.text)+'" placeholder="Tarea recurrente">'+
+        '<input class="ed-itext" data-bi="'+bi+'" data-ii="'+ii+'" value="'+escapeAttr(plainText(it.text))+'" placeholder="Tarea recurrente">'+
+        '<button class="icobtn lnk" data-link="1" data-bi="'+bi+'" data-ii="'+ii+'" title="Linkear el texto seleccionado (o toda la tarea)">'+LINK_SVG+'</button>'+
         '<div class="daychips">'+DOW_ORDER.map(dw=>'<button data-bi="'+bi+'" data-ii="'+ii+'" data-dow="'+dw+'" class="'+(it.days.includes(dw)?"on":"")+'" title="'+DOW_FULL[dw]+'">'+DOW_LET[dw]+'</button>').join("")+'</div>'+
         '<button class="icobtn" data-iact="up" data-bi="'+bi+'" data-ii="'+ii+'" title="Subir"'+(ii===0?" disabled":"")+'>↑</button>'+
         '<button class="icobtn" data-iact="down" data-bi="'+bi+'" data-ii="'+ii+'" title="Bajar"'+(ii===b.items.length-1?" disabled":"")+'>↓</button>'+
         '<button class="icobtn del" data-iact="del" data-bi="'+bi+'" data-ii="'+ii+'" title="Eliminar">×</button>'+
+        edLinksHtml(it.text,bi,ii)+
       '</div>';
     });
     html+='</div><div class="ed-add"><input data-addbi="'+bi+'" placeholder="+ nueva tarea recurrente (Enter) · por defecto de lunes a viernes" autocomplete="off"></div></div>';
@@ -1085,7 +1430,29 @@ function renderRtEditor(focusSel){
   m.querySelector("#rtDone").onclick=closeRtEditor;
   m.querySelectorAll(".ed-btitle").forEach(el=>el.oninput=()=>{ R[+el.dataset.bi].title=el.value; save(); });
   m.querySelectorAll(".ed-bhint").forEach(el=>el.oninput=()=>{ R[+el.dataset.bi].hint=el.value; save(); });
-  m.querySelectorAll(".ed-itext").forEach(el=>el.oninput=()=>{ R[+el.dataset.bi].items[+el.dataset.ii].text=el.value; save(); });
+  m.querySelectorAll(".ed-itext").forEach(el=>{
+    const remember=()=>{ el.dataset.ss=el.selectionStart; el.dataset.se=el.selectionEnd; };
+    el.addEventListener("select",remember); el.addEventListener("keyup",remember); el.addEventListener("mouseup",remember); el.addEventListener("blur",remember);
+    el.oninput=()=>{ const it=R[+el.dataset.bi].items[+el.dataset.ii]; it.text=relink(el.value, it.text); save(); };
+  });
+  m.querySelectorAll("[data-link]").forEach(btn=>{
+    btn.onmousedown=e=>e.preventDefault(); // no perder la selección del texto
+    btn.onclick=()=>{
+      const it=R[+btn.dataset.bi].items[+btn.dataset.ii];
+      const inp=m.querySelector('.ed-itext[data-bi="'+btn.dataset.bi+'"][data-ii="'+btn.dataset.ii+'"]');
+      const plain=plainText(it.text);
+      if(!plain.trim()){ toast("Escribe primero el texto de la tarea"); return; }
+      let a=inp.selectionStart, b=inp.selectionEnd;
+      if(document.activeElement!==inp){ a=+(inp.dataset.ss||0); b=+(inp.dataset.se||0); }
+      if(!(b>a)){ a=0; b=plain.length; }
+      lbPending={kind:"rt", id:it.id, a, b, rect:btn.getBoundingClientRect()};
+      showLinkInput();
+    };
+  });
+  m.querySelectorAll("[data-unl]").forEach(x=>x.onclick=()=>{
+    const it=R[+x.dataset.bi].items[+x.dataset.ii];
+    it.text=removeLinkIndex(it.text,+x.dataset.unl); save(); renderRtEditor(); renderSemana(); toast("Link quitado");
+  });
   m.querySelectorAll(".daychips button").forEach(el=>el.onclick=()=>{
     const it=R[+el.dataset.bi].items[+el.dataset.ii]; const dw=+el.dataset.dow;
     if(it.days.includes(dw)) it.days=it.days.filter(x=>x!==dw); else it.days.push(dw);
@@ -1139,7 +1506,7 @@ function taskEl(t){
   li.innerHTML =
     '<span class="tgrip" title="Arrastrar para ordenar o mover de día">⋮⋮</span>'+
     '<div class="tbox">'+CHECK_SVG+'</div>'+
-    '<span class="ttext">'+tag+escapeHtml(t.text)+'</span>'+
+    '<span class="ttext">'+tag+taskTextHtml(t)+'</span>'+
     '<button class="tdel" title="Eliminar">×</button>';
   li.querySelector(".tbox").onclick=()=>{ t.done=!t.done; save(); renderSemana(); };
   li.querySelector(".tgrip").addEventListener("pointerdown",e=>startDrag(e,li,t));
@@ -1164,7 +1531,7 @@ function renderMonthGrid(anchor){
     cell.className="mcell"+(out?" out":"")+(ds===td?" today":"");
     const tks = tasksOn(ds);
     let html = '<div class="md">'+d.getDate()+'</div>';
-    tks.slice(0,3).forEach(t=>{ html+='<div class="mt'+(t.done?" done":"")+'">'+escapeHtml(t.text)+'</div>'; });
+    tks.slice(0,3).forEach(t=>{ html+='<div class="mt'+(t.done?" done":"")+'">'+taskTextHtml(t)+'</div>'; });
     if(tks.length>3) html+='<div class="mmore">+'+(tks.length-3)+' más</div>';
     cell.innerHTML=html;
     grid.appendChild(cell);
@@ -1219,7 +1586,7 @@ function fillWeekBody(row,mon){
     box.className="wbday";
     let html='<h5>'+DAYS_ES_SHORT[d.getDay()]+' '+d.getDate()+'</h5>';
     if(tks.length===0) html+='<div class="wbempty">—</div>';
-    else{ html+='<ul>'; tks.forEach(t=>{ html+='<li class="'+(t.done?"done":"")+'"><span class="b"></span>'+escapeHtml(t.text)+'</li>'; }); html+='</ul>'; }
+    else{ html+='<ul>'; tks.forEach(t=>{ html+='<li class="'+(t.done?"done":"")+'"><span class="b"></span><span>'+taskTextHtml(t)+'</span></li>'; }); html+='</ul>'; }
     box.innerHTML=html;
     g.appendChild(box);
   }
@@ -1268,7 +1635,7 @@ function renderOverdue(){
   m.innerHTML =
     '<div class="modal-head"><span class="mt">Tareas atrasadas</span><button class="mc" id="mClose">Cerrar</button></div>'+
     '<p class="prog">'+(odPos+1)+' de '+odQueue.length+' · era para '+fmtLong(parseISO(t.date))+'</p>'+
-    '<p class="mtask">'+escapeHtml(t.text)+'</p>'+
+    '<p class="mtask">'+escapeHtml(taskPlain(t))+'</p>'+
     '<div class="m2">'+
       '<button data-a="hoy">Hoy</button>'+
       '<button data-a="manana">Mañana</button>'+
@@ -1607,15 +1974,6 @@ function setTheme(t){
 document.getElementById("lightBtn").onclick=()=>setTheme("light");
 document.getElementById("darkBtn").onclick=()=>setTheme("dark");
 
-document.getElementById("downloadHtmlBtn").onclick=()=>{
-  const blob=new Blob([PRISTINE_HTML],{type:"text/html;charset=utf-8"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url; a.download="week-os.html";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  toast("HTML descargado ✦");
-};
 document.getElementById("exportBtn").onclick=()=>{
   const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
@@ -1657,7 +2015,6 @@ document.documentElement.setAttribute("data-theme",state.theme||"light");
 document.getElementById("lightBtn").classList.toggle("on",(state.theme||"light")==="light");
 document.getElementById("darkBtn").classList.toggle("on",state.theme==="dark");
 ensureRoutines();
+bindLinkbar();
 renderSemana();
-</script>
-</body>
-</html>
+</script></body></html>
