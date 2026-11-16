@@ -11,18 +11,18 @@
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#ffffff;
-  --panel:#ffffff;
-  --panel-2:#f6f7f9;
-  --panel-3:#eef1f5;
+  --bg:#F3EFE7;
+  --panel:#FAF7F1;
+  --panel-2:#EFE9DE;
+  --panel-3:#E7E0D2;
   --ink:#002147;
   --ink-2:#0a2d54;
   --soft:#5a6675;
   --faint:#8a94a3;
-  --line:#e6e9ef;
-  --line-2:#d7dce4;
+  --line:#E2DACB;
+  --line-2:#D3C9B6;
   --accent:#a9812f;
-  --accent-soft:#f3ecdc;
+  --accent-soft:#EDE2C8;
   --good:#1f7a52;
   --warn:#b5761f;
   --danger:#a13a2f;
@@ -197,6 +197,60 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none!i
 .dayadd input::placeholder{color:var(--faint)}
 .dayadd input:focus{border-color:var(--accent)}
 
+/* ---------- Hoy ---------- */
+.todaypanel{margin-top:18px;background:var(--panel);border:1.5px solid var(--ink);border-radius:var(--radius);padding:22px 24px}
+[data-theme="dark"] .todaypanel{border-color:var(--accent)}
+.td-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.td-date{font-family:var(--serif);font-size:26px;font-weight:600;margin-top:6px;line-height:1.1;color:var(--ink)}
+.td-list{gap:2px}
+.td-list .task{font-size:14.5px;padding:7px 6px;gap:10px}
+.td-list .task .tbox{width:17px;height:17px;border-radius:5px}
+.td-list .task .tbox svg{width:10px;height:10px}
+.td-list .task .tgrip{display:none}
+.td-list .task .trep{top:8px;right:22px;font-size:14px}
+.td-list .task .tdel{top:7px;right:4px;font-size:16px}
+.td-list .task .tedit{top:8px;right:42px;font-size:14px}
+.td-list .task .ttext{padding-right:64px}
+.task .tedit{opacity:0;border:0;background:transparent;color:var(--faint);padding:0 2px;line-height:1;position:absolute;right:30px;top:2px;font-size:12px}
+.task:hover .tedit{opacity:.7}
+.task .tedit:hover{color:var(--accent);opacity:1}
+@media(hover:none){.task .tedit{opacity:.55}}
+.task .tedit-in{flex:1;min-width:0;border:1px solid var(--accent);background:var(--panel);border-radius:6px;padding:3px 6px;font-size:inherit;color:var(--ink);outline:none;font-family:inherit}
+.sec-head{display:flex;align-items:center;gap:12px;margin:44px 0 14px;flex-wrap:wrap}
+.sec-head .section-title{margin:0}
+.sec-toggle{margin-left:auto}
+.sec-toggle,.secbtn{background:transparent;border:1px solid var(--line-2);color:var(--soft);padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:500;transition:all .18s;white-space:nowrap}
+.sec-toggle:hover,.secbtn:hover{color:var(--ink);border-color:var(--ink)}
+.is-collapsed .td-head,.is-collapsed .rt-head{margin-bottom:0}
+.td-empty{color:var(--faint);font-size:13.5px;font-style:italic;padding:6px}
+.td-add input{font-size:14px;padding:10px 4px 4px}
+.td-od{display:inline-flex;margin-top:10px}
+.task .trep{opacity:0;border:0;background:transparent;color:var(--faint);padding:0 2px;line-height:1;position:absolute;right:16px;top:2px;font-size:12px}
+.task:hover .trep{opacity:.7}
+.task .trep:hover{color:var(--accent);opacity:1}
+.task.recur .trep{color:var(--accent);opacity:.8}
+@media(hover:none){.task .trep{opacity:.55}}
+.ttext .rmark{color:var(--accent);font-size:.9em;margin-right:4px;text-decoration:none;display:inline-block}
+.task .ttext{padding-right:44px}
+/* repetir */
+.rp-presets{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.rp-presets button{border:1px solid var(--line-2);background:var(--panel);color:var(--soft);padding:8px 13px;border-radius:999px;font-size:13px;font-weight:500}
+.rp-presets button:hover{border-color:var(--ink);color:var(--ink)}
+.rp-presets button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.rp-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px;font-size:14px;color:var(--soft)}
+.rp-row input[type=number]{width:70px}
+.rp-row select{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px}
+.rp-sum{background:var(--accent-soft);color:var(--ink-2);border-radius:10px;padding:11px 13px;font-size:13.5px;margin:6px 0 4px}
+.rp-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.rp-foot .mskip{margin:0}
+.rp-del{display:flex;flex-direction:column;gap:9px}
+.rp-del button{border:1px solid var(--line-2);background:var(--panel);color:var(--ink);padding:13px;border-radius:10px;font-size:14px;font-weight:500;text-align:left}
+.rp-del button:hover{border-color:var(--ink);background:var(--panel-2)}
+.rp-del button.danger{color:var(--danger)}
+.msec-head{display:flex;align-items:center;gap:12px;margin:44px 0 0;flex-wrap:wrap}
+.msec-head .datenav{margin-left:auto}
+.msec-head .datenav .today{min-width:150px}
+
 /* ---------- Month grid ---------- */
 .monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:22px}
 .mhead{text-align:center;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px}
@@ -204,9 +258,15 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none!i
 .mcell.out{opacity:.4}
 .mcell.today{border-color:var(--ink);border-width:1.5px}
 .mcell .md{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--ink)}
-.mcell .mt{color:var(--ink-2);line-height:1.25;overflow:hidden}
+.mcell .mt{color:var(--ink-2);line-height:1.25;overflow:hidden;cursor:pointer;border-radius:4px;padding:1px 3px;margin:0 -3px}
+.mcell .mt:hover{background:var(--panel-2)}
 .mcell .mt.done{color:var(--faint);text-decoration:line-through}
-.mcell .mmore{color:var(--faint);font-size:10px}
+.mcell .mt .rmark{color:var(--accent);margin-right:3px}
+.mcell .mmore{border:0;background:transparent;color:var(--accent);font-size:10.5px;font-weight:600;padding:2px 0;text-align:left}
+.mcell .mmore:hover{text-decoration:underline}
+.mcell .md{cursor:pointer;align-self:flex-start}
+.mcell .md:hover{color:var(--accent)}
+.mcell.weekon{background:color-mix(in srgb,var(--accent) 6%,var(--panel))}
 
 /* ---------- Weeks history ---------- */
 .section-title{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:44px 0 14px}
@@ -523,10 +583,6 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
   <!-- ============ VIEW: SEMANA ============ -->
   <section class="view on" id="view-semana">
     <div class="subbar">
-      <div class="seg">
-        <button class="on" id="segSemana">Week</button>
-        <button id="segMes">Month</button>
-      </div>
       <button class="chip alert" id="overdueChip" style="display:none"></button>
       <button class="chip mut" id="undecidedChip" style="display:none"></button>
       <span class="wknum" id="wkLabel"></span>
@@ -567,6 +623,8 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
           <span class="arw">→</span>
         </div>
         <p class="capture-hint">Captura rápida: <code>/l</code> llamada · <code>/j</code> junta · <code>/p</code> pendiente · sin prefijo es tarea</p>
+        <p class="capture-hint">Toca <code>✎</code> o haz doble clic en una tarea para editarla.</p>
+        <p class="capture-hint">Toca <code>↻</code> en una tarea para que se repita (todos los días, ciertos días de la semana, cada mes…).</p>
         <p class="capture-hint">Arrastra <code>⋮⋮</code> para ordenar por prioridad o mover a otro día.</p>
         <p class="capture-hint">Ajusta el ancho de los días con las barritas entre columnas (doble clic las iguala).</p>
       </div>
@@ -586,20 +644,50 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
             <button id="rtNext" title="Día siguiente">›</button>
           </div>
           <button class="iobtn" id="rtEdit">Editar rutinas</button>
+          <button class="secbtn" data-sec="routines"></button>
         </div>
       </div>
-      <div class="rt-progress"><div class="rt-bar" id="rtBar"><span id="rtBarFill"></span></div><span class="rt-count" id="rtCount"></span></div>
-      <div class="rt-blocks" id="rtBlocks"></div>
+      <div id="secBody-routines">
+        <div class="rt-progress"><div class="rt-bar" id="rtBar"><span id="rtBarFill"></span></div><span class="rt-count" id="rtCount"></span></div>
+        <div class="rt-blocks" id="rtBlocks"></div>
+      </div>
+    </div>
+
+    <!-- hoy -->
+    <div class="todaypanel" id="todayPanel">
+      <div class="td-head">
+        <div>
+          <p class="eyebrow" style="margin:0">Hoy</p>
+          <div class="td-date" id="tdDate"></div>
+        </div>
+        <div class="rt-actions"><span class="rt-count" id="tdCount"></span><button class="secbtn" data-sec="today"></button></div>
+      </div>
+      <div id="secBody-today">
+        <div class="rt-progress" style="margin-bottom:12px"><div class="rt-bar" id="tdBar"><span id="tdBarFill"></span></div></div>
+        <ul class="tasklist td-list" id="tdList"></ul>
+        <div class="dayadd td-add"><input id="tdAdd" placeholder="+ agregar tarea para hoy…" autocomplete="off"></div>
+      </div>
     </div>
 
     <!-- week grid -->
-    <div class="weekgrid" id="weekGrid"></div>
-    <!-- month grid -->
-    <div class="monthgrid" id="monthGrid" style="display:none"></div>
+    <div class="sec-head" style="margin-top:30px"><p class="section-title">Semana</p><button class="secbtn sec-toggle" data-sec="week"></button></div>
+    <div id="secBody-week"><div class="weekgrid" id="weekGrid" style="margin-top:0"></div></div>
+
+    <!-- calendario del mes -->
+    <div class="msec-head">
+      <p class="section-title" style="margin:0">Calendario</p>
+      <div class="datenav">
+        <button id="mPrev" title="Mes anterior">‹</button>
+        <button class="today" id="mLabel"></button>
+        <button id="mNext" title="Mes siguiente">›</button>
+      </div>
+      <button class="secbtn" data-sec="month"></button>
+    </div>
+    <div id="secBody-month"><div class="monthgrid" id="monthGrid"></div></div>
 
     <!-- weeks history -->
-    <p class="section-title">Weeks</p>
-    <div id="weeksHistory"></div>
+    <div class="sec-head"><p class="section-title">Weeks</p><button class="secbtn sec-toggle" data-sec="weeks"></button></div>
+    <div id="secBody-weeks"><div id="weeksHistory"></div></div>
   </section>
 
   <!-- ============ VIEW: CHECK-IN ============ -->
@@ -727,7 +815,8 @@ function monthKey(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1); }
    Navegación de fecha (vista Semana)
    ============================================================ */
 let cursor = today();          // día ancla de la semana visible
-let weekMode = "semana";       // semana | mes
+let monthCursor = new Date(today().getFullYear(), today().getMonth(), 1);
+const monthExpanded = new Set(); // días del calendario con "ver más" abierto
 
 /* ============================================================
    Tareas
@@ -981,13 +1070,199 @@ function bindLinkbar(){
   });
 }
 
-function tasksOn(dateStr){ return state.tasks.filter(t=>t.date===dateStr && !t.discarded); }
+/* ============================================================
+   TAREAS RECURRENTES
+   Una tarea con "repeat" es una serie: aparece sola en los días
+   que toca (cada N días / semanas en ciertos días / meses).
+   Se marca por fecha y no genera atrasadas.
+   repeat = {unit:"days"|"weeks"|"months", n, days:[dow], mday, until}
+   ============================================================ */
+const DOW_PLURAL = {1:"lunes",2:"martes",3:"miércoles",4:"jueves",5:"viernes",6:"sábados",0:"domingos"};
+function lastDayOf(y,m){ return new Date(y,m+1,0).getDate(); }
+function dayDiff(a,b){ return Math.round((b-a)/86400000); }
+function repDays(r,start){ return (r.days&&r.days.length)? r.days : [parseISO(start).getDay()]; }
+function occursOn(t, ds){
+  const r=t.repeat; if(!r) return false;
+  if(ds < t.date) return false;
+  if(r.until && ds > r.until) return false;
+  if(t.skip && t.skip[ds]) return false;
+  const st=parseISO(t.date), d=parseISO(ds), n=Math.max(1, parseInt(r.n,10)||1);
+  if(r.unit==="days") return dayDiff(st,d)%n===0;
+  if(r.unit==="weeks"){
+    if(!repDays(r,t.date).includes(d.getDay())) return false;
+    return (dayDiff(mondayOf(st),mondayOf(d))/7)%n===0;
+  }
+  if(r.unit==="months"){
+    const months=(d.getFullYear()-st.getFullYear())*12+d.getMonth()-st.getMonth();
+    if(months%n!==0) return false;
+    const md=r.mday||st.getDate();
+    return d.getDate()===Math.min(md,lastDayOf(d.getFullYear(),d.getMonth()));
+  }
+  return false;
+}
+function joinY(a){ return a.length<2? a.join("") : a.slice(0,-1).join(", ")+" y "+a[a.length-1]; }
+function describeRepeat(r,start){
+  if(!r) return "No se repite";
+  const n=Math.max(1,parseInt(r.n,10)||1);
+  let txt="";
+  if(r.unit==="days") txt = n===1? "Todos los días" : "Cada "+n+" días";
+  else if(r.unit==="weeks"){
+    const days=repDays(r,start).slice().sort((a,b)=>DOW_ORDER.indexOf(a)-DOW_ORDER.indexOf(b));
+    let dt;
+    if(days.length===7) dt="todos los días";
+    else if(days.length===5 && WEEKDAYS.every(x=>days.includes(x))) dt="de lunes a viernes";
+    else dt="los "+joinY(days.map(x=>DOW_PLURAL[x]));
+    txt = (n===1? "Cada semana, " : "Cada "+n+" semanas, ")+dt;
+  }
+  else if(r.unit==="months") txt = (n===1? "Cada mes" : "Cada "+n+" meses")+", el día "+(r.mday||parseISO(start).getDate());
+  return txt;
+}
+function occurrence(t,ds){
+  return {id:t.id+"@"+ds, series:t, text:t.text, type:t.type, date:ds,
+          done:!!(t.doneDates&&t.doneDates[ds]), virtual:true};
+}
+function tasksOn(dateStr){
+  const rec = state.tasks.filter(t=>t.repeat && !t.discarded && occursOn(t,dateStr)).map(t=>occurrence(t,dateStr));
+  return rec.concat(state.tasks.filter(t=>!t.repeat && t.date===dateStr && !t.discarded));
+}
+function toggleDone(t){
+  if(t.virtual){
+    const s=t.series; if(!s.doneDates) s.doneDates={};
+    if(s.doneDates[t.date]) delete s.doneDates[t.date]; else s.doneDates[t.date]=true;
+  }else t.done=!t.done;
+  save(); renderSemana();
+}
 function overdueTasks(){
   const td = iso(today());
-  return state.tasks.filter(t=>!t.done && !t.discarded && t.date < td)
+  return state.tasks.filter(t=>!t.repeat && !t.done && !t.discarded && t.date < td)
                     .sort((a,b)=>a.date<b.date?-1:1);
 }
-function undecidedTasks(){ return state.tasks.filter(t=>t.type==="pend" && !t.done && !t.discarded); }
+function undecidedTasks(){ return state.tasks.filter(t=>!t.repeat && t.type==="pend" && !t.done && !t.discarded); }
+
+/* ---------- ventana "Repetir" ---------- */
+let rp=null; // {series, base, draft, start}
+function openRepeat(t){
+  const series = t.virtual? t.series : t;
+  rp = {series, base:t.date, start: series.repeat? series.date : t.date,
+        draft: series.repeat? JSON.parse(JSON.stringify(series.repeat)) : null};
+  delete rp.draft?.until;
+  rp.until = series.repeat? (series.repeat.until||"") : "";
+  document.getElementById("overlay").classList.add("on");
+  renderRepeat();
+}
+function rpPresets(){
+  const dow=parseISO(rp.start).getDay(), md=parseISO(rp.start).getDate();
+  return [
+    ["none","No se repite",null],
+    ["daily","Todos los días",{unit:"days",n:1}],
+    ["wd","Lunes a viernes",{unit:"weeks",n:1,days:WEEKDAYS.slice()}],
+    ["weekly","Cada "+DOW_FULL[dow],{unit:"weeks",n:1,days:[dow]}],
+    ["monthly","Cada mes (día "+md+")",{unit:"months",n:1,mday:md}]
+  ];
+}
+function sameRule(a,b){
+  if(!a||!b) return !a&&!b;
+  if(a.unit!==b.unit || (parseInt(a.n,10)||1)!==(parseInt(b.n,10)||1)) return false;
+  if(a.unit==="weeks"){ const x=repDays(a,rp.start).slice().sort().join(), y=repDays(b,rp.start).slice().sort().join(); return x===y; }
+  if(a.unit==="months") return (a.mday||parseISO(rp.start).getDate())===(b.mday||parseISO(rp.start).getDate());
+  return true;
+}
+function renderRepeat(){
+  const m=document.getElementById("modal");
+  const d=rp.draft;
+  const presets=rpPresets();
+  let html='<div class="modal-head"><span class="mt">Repetir tarea</span><button class="mc" id="rpClose">Cerrar</button></div>'+
+    '<p class="mtask" style="font-size:21px;margin-bottom:16px">'+escapeHtml(taskPlain(rp.series))+'</p>'+
+    '<div class="rp-presets">'+presets.map(p=>'<button data-pre="'+p[0]+'" class="'+(sameRule(d,p[2])?"on":"")+'">'+p[1]+'</button>').join("")+
+    '<button data-pre="custom" class="'+(d && !presets.some(p=>sameRule(d,p[2]))?"on":"")+'">Personalizado…</button></div>';
+  if(d){
+    const n=Math.max(1,parseInt(d.n,10)||1);
+    html+='<div class="rp-row">Cada <input type="number" min="1" max="99" id="rpN" value="'+n+'">'+
+      '<select id="rpUnit"><option value="days"'+(d.unit==="days"?" selected":"")+'>'+(n===1?"día":"días")+'</option>'+
+      '<option value="weeks"'+(d.unit==="weeks"?" selected":"")+'>'+(n===1?"semana":"semanas")+'</option>'+
+      '<option value="months"'+(d.unit==="months"?" selected":"")+'>'+(n===1?"mes":"meses")+'</option></select></div>';
+    if(d.unit==="weeks"){
+      const days=repDays(d,rp.start);
+      html+='<div class="rp-row">Los días <div class="daychips">'+DOW_ORDER.map(dw=>'<button data-dow="'+dw+'" class="'+(days.includes(dw)?"on":"")+'" title="'+DOW_FULL[dw]+'">'+DOW_LET[dw]+'</button>').join("")+'</div></div>';
+    }
+    if(d.unit==="months"){
+      html+='<div class="rp-row">El día <input type="number" min="1" max="31" id="rpMday" value="'+(d.mday||parseISO(rp.start).getDate())+'"> del mes</div>';
+    }
+    html+='<div class="rp-row">Empieza <input type="date" id="rpStart" value="'+rp.start+'"> · termina <input type="date" id="rpUntil" value="'+rp.until+'"> <span style="font-size:12px;color:var(--faint)">(opcional)</span></div>'+
+      '<div class="rp-sum">↻ '+escapeHtml(describeRepeat(d,rp.start))+' · desde el '+fmtShort(parseISO(rp.start))+(rp.until? ' hasta el '+fmtShort(parseISO(rp.until)) : '')+'</div>';
+  }
+  html+='<div class="rp-foot"><button class="mskip" id="rpCancel">Cancelar</button><button class="btn-primary" id="rpSave">Guardar</button></div>';
+  m.innerHTML=html;
+  m.querySelector("#rpClose").onclick=closeOverdue;
+  m.querySelector("#rpCancel").onclick=closeOverdue;
+  m.querySelectorAll("[data-pre]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.pre;
+    if(k==="custom"){ if(!rp.draft) rp.draft={unit:"weeks",n:1,days:[parseISO(rp.start).getDay()]}; else rp.draft.n=Math.max(1,parseInt(rp.draft.n,10)||1); }
+    else { const p=presets.find(x=>x[0]===k); rp.draft=p[2]? JSON.parse(JSON.stringify(p[2])) : null; }
+    renderRepeat();
+  });
+  const nEl=m.querySelector("#rpN"); if(nEl) nEl.onchange=()=>{ rp.draft.n=Math.max(1,Math.min(99,parseInt(nEl.value,10)||1)); renderRepeat(); };
+  const uEl=m.querySelector("#rpUnit"); if(uEl) uEl.onchange=()=>{
+    rp.draft.unit=uEl.value;
+    if(uEl.value==="weeks" && !(rp.draft.days&&rp.draft.days.length)) rp.draft.days=[parseISO(rp.start).getDay()];
+    if(uEl.value==="months" && !rp.draft.mday) rp.draft.mday=parseISO(rp.start).getDate();
+    renderRepeat();
+  };
+  m.querySelectorAll(".daychips button").forEach(b=>b.onclick=()=>{
+    const dw=+b.dataset.dow; let days=repDays(rp.draft,rp.start).slice();
+    if(days.includes(dw)){ if(days.length===1){ toast("Deja al menos un día"); return; } days=days.filter(x=>x!==dw); } else days.push(dw);
+    rp.draft.days=days; renderRepeat();
+  });
+  const mdEl=m.querySelector("#rpMday"); if(mdEl) mdEl.onchange=()=>{ rp.draft.mday=Math.max(1,Math.min(31,parseInt(mdEl.value,10)||1)); renderRepeat(); };
+  const sEl=m.querySelector("#rpStart"); if(sEl) sEl.onchange=()=>{ if(sEl.value) rp.start=sEl.value; renderRepeat(); };
+  const tEl=m.querySelector("#rpUntil"); if(tEl) tEl.onchange=()=>{ rp.until=tEl.value||""; renderRepeat(); };
+  m.querySelector("#rpSave").onclick=saveRepeat;
+}
+function saveRepeat(){
+  const s=rp.series;
+  if(!rp.draft){
+    if(s.repeat){
+      // la serie pasa a ser una tarea normal en el día desde el que se abrió
+      s.done=!!(s.doneDates&&s.doneDates[rp.base]);
+      s.date=rp.base; delete s.repeat; delete s.doneDates; delete s.skip;
+      toast("Ya no se repite");
+    }
+    save(); closeOverdue(); return;
+  }
+  if(rp.until && rp.until<rp.start){ toast("La fecha de fin es anterior al inicio"); return; }
+  const r=JSON.parse(JSON.stringify(rp.draft));
+  r.n=Math.max(1,parseInt(r.n,10)||1);
+  if(rp.until) r.until=rp.until; else delete r.until;
+  if(!s.repeat){
+    s.doneDates = s.done? {[s.date]:true} : {};
+    s.done=false;
+  }
+  s.repeat=r; s.date=rp.start;
+  save(); closeOverdue(); toast("↻ "+describeRepeat(r,s.date));
+}
+function openRepeatDelete(t){
+  const s=t.series;
+  document.getElementById("overlay").classList.add("on");
+  const m=document.getElementById("modal");
+  m.innerHTML='<div class="modal-head"><span class="mt">Eliminar tarea que se repite</span><button class="mc" id="rdClose">Cerrar</button></div>'+
+    '<p class="mtask" style="font-size:21px">'+escapeHtml(taskPlain(s))+'</p>'+
+    '<div class="rp-del">'+
+      '<button data-d="one">Solo el '+fmtLong(parseISO(t.date))+'</button>'+
+      '<button data-d="next">Este día y los siguientes</button>'+
+      '<button data-d="all" class="danger">Toda la serie</button>'+
+    '</div>';
+  m.querySelector("#rdClose").onclick=closeOverdue;
+  m.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{
+    const a=b.dataset.d;
+    if(a==="one"){ if(!s.skip) s.skip={}; s.skip[t.date]=true; }
+    else if(a==="next"){
+      const u=iso(addDays(parseISO(t.date),-1));
+      if(u<s.date) state.tasks=state.tasks.filter(x=>x!==s); else s.repeat.until=u;
+    }
+    else state.tasks=state.tasks.filter(x=>x!==s);
+    save(); closeOverdue(); toast("Eliminada");
+  });
+}
 
 /* ============================================================
    Render: vista Semana
@@ -1034,16 +1309,10 @@ function renderSemana(){
   const uc = document.getElementById("undecidedChip");
   if(und>0){ uc.style.display=""; uc.textContent="Por decidir "+und; } else uc.style.display="none";
 
-  // grid
-  if(weekMode==="semana"){
-    document.getElementById("weekGrid").style.display="grid";
-    document.getElementById("monthGrid").style.display="none";
-    renderWeekGrid(mon);
-  }else{
-    document.getElementById("weekGrid").style.display="none";
-    document.getElementById("monthGrid").style.display="grid";
-    renderMonthGrid(cursor);
-  }
+  applySections();
+  renderToday();
+  renderWeekGrid(mon);
+  renderMonthGrid();
 
   renderWeeksHistory();
 }
@@ -1232,7 +1501,7 @@ function endDrag(){
   if(!list || !list.dataset.date){ renderSemana(); return; }
   const newDate=list.dataset.date;
   let next=li.nextElementSibling;
-  while(next && !next.dataset.id) next=next.nextElementSibling;
+  while(next && (!next.dataset.id || next.dataset.virtual)) next=next.nextElementSibling;
   // reordenar en el arreglo global: el orden de cada día es el orden del arreglo
   const from=state.tasks.findIndex(x=>x.id===task.id);
   if(from<0){ renderSemana(); return; }
@@ -1243,7 +1512,7 @@ function endDrag(){
   if(next){ to=state.tasks.findIndex(x=>x.id===next.dataset.id); }
   else{
     let last=-1;
-    state.tasks.forEach((x,i)=>{ if(x.date===newDate && !x.discarded) last=i; });
+    state.tasks.forEach((x,i)=>{ if(!x.repeat && x.date===newDate && !x.discarded) last=i; });
     to= last>=0 ? last+1 : state.tasks.length;
   }
   if(to<0) to=state.tasks.length;
@@ -1500,43 +1769,151 @@ document.addEventListener("keydown",e=>{
 });
 function taskEl(t){
   const li = document.createElement("li");
-  li.className="task"+(t.done?" done":"");
+  li.className="task"+(t.done?" done":"")+(t.virtual?" recur":"");
   li.dataset.id=t.id;
+  if(t.virtual) li.dataset.virtual="1";
   const tag = TYPE_LABEL[t.type] ? '<span class="ttype '+TYPE_CLASS[t.type]+'">'+TYPE_LABEL[t.type]+'</span>' : '';
+  const rdesc = t.virtual? describeRepeat(t.series.repeat,t.series.date) : "";
   li.innerHTML =
-    '<span class="tgrip" title="Arrastrar para ordenar o mover de día">⋮⋮</span>'+
+    (t.virtual? '<span class="tgrip" style="visibility:hidden">⋮⋮</span>' : '<span class="tgrip" title="Arrastrar para ordenar o mover de día">⋮⋮</span>')+
     '<div class="tbox">'+CHECK_SVG+'</div>'+
-    '<span class="ttext">'+tag+taskTextHtml(t)+'</span>'+
+    '<span class="ttext">'+(t.virtual?'<span class="rmark" title="'+escapeAttr(rdesc)+'">↻</span>':'')+tag+taskTextHtml(t)+'</span>'+
+    '<button class="tedit" title="Editar">✎</button>'+
+    '<button class="trep" title="'+(t.virtual? escapeAttr("Se repite: "+rdesc) : "Repetir esta tarea")+'">↻</button>'+
     '<button class="tdel" title="Eliminar">×</button>';
-  li.querySelector(".tbox").onclick=()=>{ t.done=!t.done; save(); renderSemana(); };
-  li.querySelector(".tgrip").addEventListener("pointerdown",e=>startDrag(e,li,t));
-  li.querySelector(".tdel").onclick=(e)=>{ e.stopPropagation(); state.tasks=state.tasks.filter(x=>x.id!==t.id); save(); renderSemana(); };
+  li.querySelector(".tbox").onclick=()=>toggleDone(t);
+  if(!t.virtual) li.querySelector(".tgrip").addEventListener("pointerdown",e=>startDrag(e,li,t));
+  li.querySelector(".trep").onclick=(e)=>{ e.stopPropagation(); openRepeat(t); };
+  li.querySelector(".tedit").onclick=(e)=>{ e.stopPropagation(); startEdit(li,t); };
+  li.querySelector(".ttext").ondblclick=(e)=>{ if(e.target.closest("a")) return; startEdit(li,t); };
+  li.querySelector(".tdel").onclick=(e)=>{
+    e.stopPropagation();
+    if(t.virtual){ openRepeatDelete(t); return; }
+    state.tasks=state.tasks.filter(x=>x.id!==t.id); save(); renderSemana();
+  };
   return li;
 }
 
-function renderMonthGrid(anchor){
+/* ---------- Editar el texto de una tarea ----------
+   Lápiz ✎ o doble clic. Enter guarda, Esc cancela. En una tarea que
+   se repite, se cambia el texto de toda la serie. */
+function startEdit(li,t){
+  const src = t.virtual? t.series : t;
+  const span = li.querySelector(".ttext");
+  if(!span || li.querySelector(".tedit-in")) return;
+  const pre = {call:"/l ", meet:"/j ", pend:"/p "}[src.type]||"";
+  const inp = document.createElement("input");
+  inp.className="tedit-in"; inp.value = pre+taskPlain(src);
+  inp.title="Enter para guardar · Esc para cancelar";
+  span.replaceWith(inp);
+  li.querySelectorAll(".tedit,.trep,.tdel").forEach(b=>b.style.display="none");
+  inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length);
+  let done=false;
+  const finish=(ok)=>{
+    if(done) return; done=true;
+    if(ok){
+      const {type,text}=parseCapture(inp.value);
+      if(text.trim()){ setTaskSource(src, relink(text.trim(), taskSource(src))); src.type=type; save(); }
+    }
+    renderSemana();
+  };
+  inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); finish(true); } else if(e.key==="Escape"){ e.preventDefault(); e.stopPropagation(); finish(false); } };
+  inp.onblur=()=>finish(true);
+  inp.addEventListener("pointerdown",e=>e.stopPropagation());
+}
+
+/* ---------- Hoy ---------- */
+function renderToday(){
+  const ds=iso(today());
+  document.getElementById("tdDate").textContent=fmtLong(today());
+  const tks=tasksOn(ds);
+  const done=tks.filter(t=>t.done).length;
+  const pct=tks.length? Math.round(done/tks.length*100) : 0;
+  document.getElementById("tdBarFill").style.width=pct+"%";
+  document.getElementById("tdBar").classList.toggle("full", tks.length>0 && done===tks.length);
+  document.getElementById("tdCount").textContent = tks.length
+    ? (done===tks.length? "Día completo ✦ " : "")+done+" de "+tks.length+" hechas"
+    : "";
+  const ul=document.getElementById("tdList");
+  ul.innerHTML="";
+  ul.dataset.date=ds;
+  if(!tks.length) ul.innerHTML='<li class="td-empty">Nada para hoy todavía. Agrega abajo lo que tienes que hacer.</li>';
+  tks.forEach(t=>ul.appendChild(taskEl(t)));
+}
+document.getElementById("tdAdd").addEventListener("keydown",e=>{
+  const inp=e.target;
+  if(e.key==="Enter" && inp.value.trim()){ addTask(iso(today()), inp.value); inp.value=""; renderSemana(); }
+});
+
+const MONTH_SHOW = 3; // tareas visibles por día antes de "ver más"
+function renderMonthGrid(){
+  const anchor = monthCursor;
+  const show = !secHidden("month");
+  document.getElementById("mLabel").textContent = MONTHS_ES[anchor.getMonth()]+" "+anchor.getFullYear();
   const grid = document.getElementById("monthGrid");
   grid.innerHTML="";
+  if(!show) return;
   DAYS_ES_SHORT.slice(1).concat(DAYS_ES_SHORT[0]).forEach(n=>{
     const h=document.createElement("div"); h.className="mhead"; h.textContent=n; grid.appendChild(h);
   });
   const first = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
   const start = mondayOf(first);
+  const weeks = Math.ceil((dayDiff(start,first)+lastDayOf(anchor.getFullYear(),anchor.getMonth()))/7);
   const td = iso(today());
-  for(let i=0;i<42;i++){
+  const wkMon = iso(mondayOf(cursor));
+  for(let i=0;i<weeks*7;i++){
     const d = addDays(start,i);
     const ds = iso(d);
     const out = d.getMonth()!==anchor.getMonth();
     const cell = document.createElement("div");
-    cell.className="mcell"+(out?" out":"")+(ds===td?" today":"");
+    cell.className="mcell"+(out?" out":"")+(ds===td?" today":"")+(iso(mondayOf(d))===wkMon?" weekon":"");
     const tks = tasksOn(ds);
-    let html = '<div class="md">'+d.getDate()+'</div>';
-    tks.slice(0,3).forEach(t=>{ html+='<div class="mt'+(t.done?" done":"")+'">'+taskTextHtml(t)+'</div>'; });
-    if(tks.length>3) html+='<div class="mmore">+'+(tks.length-3)+' más</div>';
+    const open = monthExpanded.has(ds);
+    const vis = open? tks : tks.slice(0,MONTH_SHOW);
+    let html = '<div class="md" data-go="'+ds+'" title="Ver esta semana">'+d.getDate()+'</div>';
+    vis.forEach((t,k)=>{ html+='<div class="mt'+(t.done?" done":"")+'" data-k="'+k+'" title="Clic para marcar como hecha">'+(t.virtual?'<span class="rmark">↻</span>':'')+taskTextHtml(t)+'</div>'; });
+    if(tks.length>MONTH_SHOW) html+='<button class="mmore" data-more="'+ds+'">'+(open? "Ver menos" : "+"+(tks.length-MONTH_SHOW)+" más")+'</button>';
     cell.innerHTML=html;
+    cell.querySelectorAll(".mt").forEach(el=>el.onclick=()=>toggleDone(vis[+el.dataset.k]));
     grid.appendChild(cell);
   }
+  grid.querySelectorAll("[data-more]").forEach(b=>b.onclick=()=>{
+    const ds=b.dataset.more; if(monthExpanded.has(ds)) monthExpanded.delete(ds); else monthExpanded.add(ds); renderMonthGrid();
+  });
+  grid.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{
+    cursor=parseISO(b.dataset.go); rtDate=b.dataset.go; renderSemana();
+    document.getElementById("weekGrid").scrollIntoView({behavior:"smooth",block:"center"});
+  });
 }
+function shiftMonth(n){ monthCursor=new Date(monthCursor.getFullYear(), monthCursor.getMonth()+n, 1); renderMonthGrid(); }
+document.getElementById("mPrev").onclick=()=>shiftMonth(-1);
+document.getElementById("mNext").onclick=()=>shiftMonth(1);
+document.getElementById("mLabel").onclick=()=>{ monthCursor=new Date(today().getFullYear(), today().getMonth(), 1); renderMonthGrid(); };
+/* ---------- Mostrar / ocultar secciones ---------- */
+function secHidden(k){
+  if(!state.hiddenSecs || typeof state.hiddenSecs!=="object"){
+    state.hiddenSecs={};
+    if(state.showMonth===false) state.hiddenSecs.month=true;
+    delete state.showMonth;
+  }
+  return !!state.hiddenSecs[k];
+}
+function applySections(){
+  document.querySelectorAll("[data-sec]").forEach(b=>{
+    const k=b.dataset.sec, hid=secHidden(k);
+    b.textContent = hid? "Mostrar" : "Ocultar";
+    b.title = hid? "Mostrar esta sección" : "Ocultar esta sección";
+    const body=document.getElementById("secBody-"+k);
+    if(body) body.style.display = hid? "none" : "";
+    const panel=b.closest(".todaypanel,.routine");
+    if(panel) panel.classList.toggle("is-collapsed",hid);
+  });
+}
+document.querySelectorAll("[data-sec]").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.sec; secHidden(k);
+  if(state.hiddenSecs[k]) delete state.hiddenSecs[k]; else state.hiddenSecs[k]=true;
+  save(); applySections(); renderSemana();
+});
 
 function renderWeeksHistory(){
   const host = document.getElementById("weeksHistory");
@@ -1605,8 +1982,6 @@ document.getElementById("navNext").onclick=()=>shiftWeek(7);
 document.getElementById("navPrevJump").onclick=()=>shiftWeek(-28);
 document.getElementById("navNextJump").onclick=()=>shiftWeek(28);
 document.getElementById("navToday").onclick=()=>{ cursor=today(); rtDate=iso(today()); renderSemana(); };
-document.getElementById("segSemana").onclick=()=>{ weekMode="semana"; document.getElementById("segSemana").classList.add("on"); document.getElementById("segMes").classList.remove("on"); renderSemana(); };
-document.getElementById("segMes").onclick=()=>{ weekMode="mes"; document.getElementById("segMes").classList.add("on"); document.getElementById("segSemana").classList.remove("on"); renderSemana(); };
 document.getElementById("cleanOverdue").onclick=()=>openOverdue();
 document.getElementById("overdueChip").onclick=()=>openOverdue();
 
