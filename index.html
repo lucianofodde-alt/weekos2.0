@@ -158,6 +158,7 @@ input,select{font-family:inherit;color:inherit}
 .tt-call{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
 .tt-meet{color:var(--warn);background:color-mix(in srgb,var(--warn) 12%,transparent)}
 .tt-pend{color:var(--accent);background:var(--accent-soft)}
+.tt-train{color:var(--ink-2);background:color-mix(in srgb,var(--ink) 11%,transparent)}
 .task .tdel{opacity:0;border:0;background:transparent;color:var(--faint);font-size:13px;padding:0 2px;line-height:1;position:absolute;right:2px;top:3px}
 .task:hover .tdel{opacity:.7}
 .task .tlinkbtn{opacity:0;border:0;background:transparent;color:var(--faint);padding:0 2px;line-height:1;position:absolute;right:16px;top:3px;display:grid;place-items:center}
@@ -288,8 +289,28 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none!i
 .pr-newcard input{width:100%;border:0;background:transparent;font-size:14px;color:var(--ink);outline:none}
 .pr-newcard input::placeholder{color:var(--faint)}
 
+/* ---------- Plan de entrenamiento ---------- */
+.tr-card .tr-freq{display:inline-flex;align-items:center;gap:6px;margin:8px 0 0 34px;border:1px solid var(--line-2);background:var(--panel);color:var(--soft);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:500;align-self:flex-start;max-width:calc(100% - 34px);text-align:left}
+.tr-card .tr-freq:hover{border-color:var(--accent);color:var(--ink)}
+.tr-card .tr-freq.on{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line-2))}
+.tr-card .tr-freq.none{border-style:dashed;color:var(--faint)}
+.tr-note{margin:8px 0 0 34px;width:calc(100% - 34px);border:0;border-bottom:1px dashed var(--line-2);background:transparent;font-size:12.5px;color:var(--soft);padding:3px 2px}
+.tr-note:focus{outline:none;border-bottom-color:var(--accent);color:var(--ink)}
+.tr-note::placeholder{color:var(--faint);font-style:italic}
+.tr-foot{display:flex;align-items:center;gap:10px;margin:10px 0 0 34px;flex-wrap:wrap}
+.tr-week{flex:1;min-width:120px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--faint);white-space:nowrap}
+.tr-week .mb{flex:1;height:4px;background:var(--panel-3);border-radius:99px;overflow:hidden}
+.tr-week .mb i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tr-week.full{color:var(--good)} .tr-week.full .mb i{background:var(--good)}
+.tr-today{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink-2);border-radius:8px;padding:4px 10px 4px 7px;font-size:12px;font-weight:500}
+.tr-today .rcheck{width:15px;height:15px}
+.tr-today.on{border-color:var(--good);color:var(--good)}
+.tr-today:hover{border-color:var(--ink)}
+
 /* ---------- Month grid ---------- */
-.monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:22px}
+.monthgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:22px}
+.mcell{min-width:0}
+.mcell .mt{overflow-wrap:anywhere}
 .mhead{text-align:center;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px}
 .mcell{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:96px;padding:8px 9px;font-size:11px;display:flex;flex-direction:column;gap:3px}
 .mcell.out{opacity:.4}
@@ -577,7 +598,7 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
   .wrap{padding:0 16px 80px}
   .wordmark{font-size:32px}
   .weekgrid{grid-template-columns:1fr}
-  .monthgrid{grid-template-columns:repeat(7,1fr);gap:4px}
+  .monthgrid{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
   .mcell{min-height:64px;padding:5px}
   .stat-cards{grid-template-columns:1fr}
   .ci-panel{padding:24px 20px}
@@ -718,6 +739,21 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
       <div id="secBody-prio">
         <p class="pr-intro">De arriba hacia abajo: la 1 va primero. Usa ↑ ↓ para reordenar, toca el título para renombrar y anota adentro a quién o qué atender.</p>
         <div class="pr-list" id="prList"></div>
+      </div>
+    </div>
+
+    <!-- plan de entrenamiento -->
+    <div class="priopanel" id="trainPanel">
+      <div class="td-head">
+        <div>
+          <p class="eyebrow" style="margin:0">Plan de entrenamiento</p>
+          <div class="td-date" style="font-size:22px">Cómo me entreno para ser mejor closer</div>
+        </div>
+        <div class="rt-actions"><button class="secbtn" data-sec="train"></button></div>
+      </div>
+      <div id="secBody-train">
+        <p class="pr-intro">Ordena con ↑ ↓ por importancia. Toca la frecuencia para elegir cada cuánto (una vez, todos los días, una vez por semana…): se suma sola a tus tareas de la semana con la etiqueta Entreno.</p>
+        <div class="pr-list" id="trList"></div>
       </div>
     </div>
 
@@ -1193,10 +1229,11 @@ function undecidedTasks(){ return state.tasks.filter(t=>!t.repeat && t.type==="p
 
 /* ---------- ventana "Repetir" ---------- */
 let rp=null; // {series, base, draft, start}
-function openRepeat(t){
+function openRepeat(t, opts){
   const series = t.virtual? t.series : t;
-  rp = {series, base:t.date, start: series.repeat? series.date : t.date,
+  rp = {series, base:t.date, start: series.repeat? series.date : t.date, once:t.date, opts:opts||{},
         draft: series.repeat? JSON.parse(JSON.stringify(series.repeat)) : null};
+  if(rp.opts.draft && !series.repeat) rp.draft=JSON.parse(JSON.stringify(rp.opts.draft));
   delete rp.draft?.until;
   rp.until = series.repeat? (series.repeat.until||"") : "";
   document.getElementById("overlay").classList.add("on");
@@ -1243,6 +1280,7 @@ function renderRepeat(){
     html+='<div class="rp-row">Empieza <input type="date" id="rpStart" value="'+rp.start+'"> · termina <input type="date" id="rpUntil" value="'+rp.until+'"> <span style="font-size:12px;color:var(--faint)">(opcional)</span></div>'+
       '<div class="rp-sum">↻ '+escapeHtml(describeRepeat(d,rp.start))+' · desde el '+fmtShort(parseISO(rp.start))+(rp.until? ' hasta el '+fmtShort(parseISO(rp.until)) : '')+'</div>';
   }
+  if(!d) html+='<div class="rp-row">Fecha <input type="date" id="rpOnce" value="'+(rp.once||rp.base)+'"> <span style="font-size:12px;color:var(--faint)">(una sola vez)</span></div>';
   html+='<div class="rp-foot"><button class="mskip" id="rpCancel">Cancelar</button><button class="btn-primary" id="rpSave">Guardar</button></div>';
   m.innerHTML=html;
   m.querySelector("#rpClose").onclick=closeOverdue;
@@ -1268,18 +1306,20 @@ function renderRepeat(){
   const mdEl=m.querySelector("#rpMday"); if(mdEl) mdEl.onchange=()=>{ rp.draft.mday=Math.max(1,Math.min(31,parseInt(mdEl.value,10)||1)); renderRepeat(); };
   const sEl=m.querySelector("#rpStart"); if(sEl) sEl.onchange=()=>{ if(sEl.value) rp.start=sEl.value; renderRepeat(); };
   const tEl=m.querySelector("#rpUntil"); if(tEl) tEl.onchange=()=>{ rp.until=tEl.value||""; renderRepeat(); };
+  const oEl=m.querySelector("#rpOnce"); if(oEl) oEl.onchange=()=>{ if(oEl.value){ rp.once=oEl.value; rp.start=oEl.value; } };
   m.querySelector("#rpSave").onclick=saveRepeat;
 }
 function saveRepeat(){
   const s=rp.series;
   if(!rp.draft){
+    const day = rp.once||rp.base;
     if(s.repeat){
-      // la serie pasa a ser una tarea normal en el día desde el que se abrió
+      // la serie pasa a ser una tarea normal en la fecha elegida
       s.done=!!(s.doneDates&&s.doneDates[rp.base]);
-      s.date=rp.base; delete s.repeat; delete s.doneDates; delete s.skip;
+      s.date=day; delete s.repeat; delete s.doneDates; delete s.skip;
       toast("Ya no se repite");
-    }
-    save(); closeOverdue(); return;
+    } else s.date=day;
+    finishRepeatSave(s); return;
   }
   if(rp.until && rp.until<rp.start){ toast("La fecha de fin es anterior al inicio"); return; }
   const r=JSON.parse(JSON.stringify(rp.draft));
@@ -1290,7 +1330,13 @@ function saveRepeat(){
     s.done=false;
   }
   s.repeat=r; s.date=rp.start;
-  save(); closeOverdue(); toast("↻ "+describeRepeat(r,s.date));
+  toast("↻ "+describeRepeat(r,s.date));
+  finishRepeatSave(s);
+}
+function finishRepeatSave(s){
+  if(rp.opts.pending && !state.tasks.includes(s)) state.tasks.push(s);
+  if(rp.opts.onSave) rp.opts.onSave(s);
+  save(); closeOverdue();
 }
 function openRepeatDelete(t){
   const s=t.series;
@@ -1319,8 +1365,8 @@ function openRepeatDelete(t){
 /* ============================================================
    Render: vista Semana
    ============================================================ */
-const TYPE_LABEL = {call:"Llamada", meet:"Junta", pend:"Pend"};
-const TYPE_CLASS = {call:"tt-call", meet:"tt-meet", pend:"tt-pend"};
+const TYPE_LABEL = {call:"Llamada", meet:"Junta", pend:"Pend", train:"Entreno"};
+const TYPE_CLASS = {call:"tt-call", meet:"tt-meet", pend:"tt-pend", train:"tt-train"};
 const CHECK_SVG = '<svg viewBox="0 0 12 12"><path d="M2 6.5 5 9.5 10 3"/></svg>';
 
 function renderSemana(){
@@ -1364,6 +1410,7 @@ function renderSemana(){
   applySections();
   renderToday();
   renderPriorities();
+  renderTraining();
   renderWeekGrid(mon);
   renderMonthGrid();
 
@@ -1866,7 +1913,7 @@ function startEdit(li,t){
     if(done) return; done=true;
     if(ok){
       const {type,text}=parseCapture(inp.value);
-      if(text.trim()){ setTaskSource(src, relink(text.trim(), taskSource(src))); src.type=type; save(); }
+      if(text.trim()){ setTaskSource(src, relink(text.trim(), taskSource(src))); src.type = (src.type==="train" && type==="task")? "train" : type; save(); }
     }
     renderSemana();
   };
@@ -1959,6 +2006,121 @@ function renderPriorities(){
   ni.onkeydown=e=>{ if(e.key==="Enter" && ni.value.trim()){ P.push({id:newId(), title:ni.value.trim(), items:[]}); save(); renderPriorities(); const x=document.getElementById("prNew"); if(x) x.focus(); } };
   host.appendChild(nc);
   if(focusAdd){ const f=host.querySelector('[data-padd="'+focusAdd+'"]'); if(f) f.focus(); }
+}
+
+/* ============================================================
+   PLAN DE ENTRENAMIENTO
+   Hábitos para crecer (roleplay, analizar llamadas, libros…).
+   Cada uno puede tener frecuencia: queda unido a una tarea (única
+   o recurrente) que aparece en Hoy, la Semana y el Calendario.
+   plan item = {id, title, note, taskId}
+   ============================================================ */
+function ensureTraining(){
+  if(Array.isArray(state.training)) return;
+  const td=iso(today());
+  const mkTask=(text,repeat)=>{ const t={id:newId(), text, date:td, type:"train", done:false, discarded:false, repeat, doneDates:{}}; state.tasks.push(t); return t.id; };
+  const mk=(title,note,repeat)=>({id:newId(), title, note:note||"", taskId: repeat? mkTask(title,repeat) : null});
+  state.training=[
+    mk("Roleplay", "", {unit:"days",n:1}),
+    mk("Analizar llamadas de ventas", "Ver dónde fallé y qué mejorar, como un futbolista que mira el partido", {unit:"weeks",n:1,days:[5]}),
+    mk("Capacitación / formación en ventas"),
+    mk("Autodiagnóstico: mis métricas y dónde flaqueo"),
+    mk("Libros"),
+    mk("Meetings con amigos del rubro")
+  ];
+  save();
+}
+function trTask(it){ return it.taskId? state.tasks.find(t=>t.id===it.taskId && !t.discarded) : null; }
+function trFreqText(t){
+  if(!t) return "Sin frecuencia · agendar";
+  if(t.repeat) return "↻ "+describeRepeat(t.repeat,t.date);
+  return "Una vez · "+fmtShort(parseISO(t.date));
+}
+function trWeek(t){
+  if(!t) return null;
+  const mon=mondayOf(today()); let tot=0, done=0;
+  for(let i=0;i<7;i++){
+    const ds=iso(addDays(mon,i));
+    if(t.repeat){ if(occursOn(t,ds)){ tot++; if(t.doneDates&&t.doneDates[ds]) done++; } }
+    else if(t.date===ds){ tot++; if(t.done) done++; }
+  }
+  return {tot,done};
+}
+function trToday(t){
+  if(!t) return null;
+  const ds=iso(today());
+  if(t.repeat) return occursOn(t,ds)? occurrence(t,ds) : null;
+  return t.date===ds? t : null;
+}
+function renderTraining(){
+  ensureTraining();
+  const host=document.getElementById("trList");
+  const L=state.training;
+  host.innerHTML="";
+  L.forEach((it,ii)=>{
+    const t=trTask(it);
+    if(t && t.text!==it.title) it.title=taskPlain(t);
+    const wk=trWeek(t), tdy=trToday(t);
+    const card=document.createElement("div");
+    card.className="pr-card tr-card"+(ii===0?" top":"");
+    let foot="";
+    if(wk && wk.tot){
+      const pct=Math.round(wk.done/wk.tot*100);
+      foot+='<span class="tr-week'+(wk.done===wk.tot?" full":"")+'">Esta semana '+wk.done+'/'+wk.tot+'<span class="mb"><i style="width:'+pct+'%"></i></span></span>';
+    }
+    if(tdy) foot+='<button class="tr-today'+(tdy.done?" on":"")+'"><span class="rcheck'+(tdy.done?" on":"")+'">'+CHECK_SVG+'</span>'+(tdy.done?"Hecho hoy":"Hoy")+'</button>';
+    card.innerHTML=
+      '<div class="pr-head"><span class="pr-num">'+(ii+1)+'</span>'+
+        '<div class="pr-title" contenteditable="true" spellcheck="false" data-ph="Nombre del hábito">'+escapeHtml(it.title)+'</div>'+
+        '<span class="pr-tools">'+
+          '<button class="icobtn" data-a="up" title="Subir"'+(ii===0?" disabled":"")+'>↑</button>'+
+          '<button class="icobtn" data-a="down" title="Bajar"'+(ii===L.length-1?" disabled":"")+'>↓</button>'+
+          '<button class="icobtn del" data-a="del" title="Eliminar del plan">×</button>'+
+        '</span></div>'+
+      '<button class="tr-freq'+(t? (t.repeat?" on":"") : " none")+'" title="Elegir cada cuánto">'+escapeHtml(trFreqText(t))+'</button>'+
+      '<input class="tr-note" value="'+escapeAttr(it.note||"")+'" placeholder="Detalle (opcional): qué libro, qué curso, con quién…">'+
+      (foot? '<div class="tr-foot">'+foot+'</div>' : '');
+    const ti=card.querySelector(".pr-title");
+    let tchg=false;
+    ti.oninput=()=>{ tchg=true; it.title=ti.textContent.replace(/\s+/g," ").trim(); const tk=trTask(it); if(tk && it.title) setTaskSource(tk, relink(it.title, taskSource(tk))); save(); };
+    ti.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); ti.blur(); } };
+    ti.onblur=()=>{ if(tchg) renderSemana(); };
+    ti.onpaste=e=>{ e.preventDefault(); document.execCommand("insertText",false,(e.clipboardData||window.clipboardData).getData("text").replace(/\s+/g," ")); };
+    const no=card.querySelector(".tr-note");
+    no.oninput=()=>{ it.note=no.value; save(); };
+    card.querySelector(".tr-freq").onclick=()=>{
+      const tk=trTask(it);
+      if(tk){ openRepeat(tk); return; }
+      if(!it.title.trim()){ toast("Primero ponle nombre"); return; }
+      const nt={id:newId(), text:it.title, date:iso(today()), type:"train", done:false, discarded:false};
+      openRepeat(nt,{pending:true, draft:{unit:"days",n:1}, onSave:s=>{ it.taskId=s.id; }});
+    };
+    const tb=card.querySelector(".tr-today");
+    if(tb) tb.onclick=()=>toggleDone(tdy);
+    card.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{
+      const a=b.dataset.a;
+      if(a==="up") moveIn(L,ii,-1);
+      else if(a==="down") moveIn(L,ii,1);
+      else if(a==="del"){
+        const tk=trTask(it);
+        if(!confirm('¿Sacar "'+(it.title||"este hábito")+'" del plan?'+(tk?" También deja de aparecer en tus tareas desde hoy (lo que ya marcaste queda guardado).":""))) return;
+        if(tk){
+          const td=iso(today());
+          if(tk.repeat){ const u=iso(addDays(today(),-1)); if(u<tk.date) state.tasks=state.tasks.filter(x=>x!==tk); else tk.repeat.until=u; }
+          else if(!tk.done && tk.date>=td) state.tasks=state.tasks.filter(x=>x!==tk);
+        }
+        L.splice(ii,1);
+      }
+      save(); renderSemana();
+    });
+    host.appendChild(card);
+  });
+  const nc=document.createElement("div");
+  nc.className="pr-newcard";
+  nc.innerHTML='<input id="trNew" placeholder="+ Nuevo hábito de entrenamiento (Enter)" autocomplete="off">';
+  const ni=nc.querySelector("input");
+  ni.onkeydown=e=>{ if(e.key==="Enter" && ni.value.trim()){ L.push({id:newId(), title:ni.value.trim(), note:"", taskId:null}); save(); renderTraining(); const x=document.getElementById("trNew"); if(x) x.focus(); } };
+  host.appendChild(nc);
 }
 
 /* ---------- Hoy ---------- */
