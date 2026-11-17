@@ -250,6 +250,44 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none!i
 .msec-head .datenav{margin-left:auto}
 .msec-head .datenav .today{min-width:150px}
 
+/* ---------- Lista de prioridades ---------- */
+.priopanel{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px}
+.pr-intro{font-size:12.5px;color:var(--faint);margin:-4px 0 14px}
+.pr-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.pr-card{border:1px solid var(--line);border-radius:11px;padding:14px 14px 10px;background:var(--panel-2);display:flex;flex-direction:column;min-width:0}
+.pr-card.top{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.pr-head{display:flex;align-items:flex-start;gap:8px}
+.pr-head .pr-num,.pr-head .pr-tools,.pr-head .pr-count{margin-top:3px}
+.pr-title:empty::before{content:attr(data-ph);color:var(--faint);font-style:italic}
+.pr-num{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:16px;font-weight:700;background:var(--panel-3);color:var(--soft)}
+.pr-card.top .pr-num{background:var(--accent);color:var(--panel)}
+.pr-title{flex:1;min-width:0;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);border:1px solid transparent;background:transparent;border-radius:7px;padding:3px 6px;line-height:1.2}
+.pr-title:hover,.pr-title:focus{border-color:var(--line-2);background:var(--panel);outline:none}
+.pr-count{font-size:11.5px;color:var(--faint);white-space:nowrap}
+.pr-tools{display:flex;gap:0;margin-left:-2px}
+.pr-tools .icobtn{width:24px;height:24px;font-size:12px}
+.pr-items{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:1px;flex:1}
+.pr-item{display:flex;align-items:flex-start;gap:9px;padding:5px 4px;border-radius:7px;font-size:13.5px;color:var(--ink-2);line-height:1.35;position:relative}
+.pr-item:hover{background:var(--panel)}
+.pr-item .rcheck{margin-top:1px;cursor:pointer}
+.pr-item .txt{flex:1;min-width:0;word-break:break-word;padding-right:36px}
+.pr-item.done .txt{color:var(--faint);text-decoration:line-through}
+.pr-item button{opacity:0;border:0;background:transparent;color:var(--faint);position:absolute;top:5px;padding:0 2px;font-size:12px;line-height:1}
+.pr-item:hover button{opacity:.7}
+.pr-item button:hover{opacity:1;color:var(--accent)}
+.pr-item .pdel{right:4px;font-size:14px}
+.pr-item .pdel:hover{color:var(--danger)}
+.pr-item .pedit{right:20px}
+@media(hover:none){.pr-item button{opacity:.55}}
+.pr-item input{flex:1;min-width:0;border:1px solid var(--accent);background:var(--panel);border-radius:6px;padding:2px 6px;font-size:13.5px;color:var(--ink);outline:none}
+.pr-add input{width:100%;border:0;border-top:1px solid var(--line);background:transparent;font-size:12.5px;color:var(--ink);padding:8px 2px 2px;margin-top:6px}
+.pr-add input:focus{border-color:var(--accent);outline:none}
+.pr-add input::placeholder{color:var(--faint)}
+.pr-clear{border:0;background:transparent;color:var(--accent);font-size:11.5px;font-weight:600;padding:6px 2px 0;text-align:left;align-self:flex-start}
+.pr-newcard{border:1px dashed var(--line-2);border-radius:11px;padding:14px;display:flex;align-items:center}
+.pr-newcard input{width:100%;border:0;background:transparent;font-size:14px;color:var(--ink);outline:none}
+.pr-newcard input::placeholder{color:var(--faint)}
+
 /* ---------- Month grid ---------- */
 .monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:22px}
 .mhead{text-align:center;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px}
@@ -665,6 +703,21 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
         <div class="rt-progress" style="margin-bottom:12px"><div class="rt-bar" id="tdBar"><span id="tdBarFill"></span></div></div>
         <ul class="tasklist td-list" id="tdList"></ul>
         <div class="dayadd td-add"><input id="tdAdd" placeholder="+ agregar tarea para hoy…" autocomplete="off"></div>
+      </div>
+    </div>
+
+    <!-- lista de prioridades -->
+    <div class="priopanel" id="prioPanel">
+      <div class="td-head">
+        <div>
+          <p class="eyebrow" style="margin:0">Lista de prioridades</p>
+          <div class="td-date" style="font-size:22px">¿Dónde pongo mi tiempo hoy?</div>
+        </div>
+        <div class="rt-actions"><button class="secbtn" data-sec="prio"></button></div>
+      </div>
+      <div id="secBody-prio">
+        <p class="pr-intro">De arriba hacia abajo: la 1 va primero. Usa ↑ ↓ para reordenar, toca el título para renombrar y anota adentro a quién o qué atender.</p>
+        <div class="pr-list" id="prList"></div>
       </div>
     </div>
 
@@ -1310,6 +1363,7 @@ function renderSemana(){
 
   applySections();
   renderToday();
+  renderPriorities();
   renderWeekGrid(mon);
   renderMonthGrid();
 
@@ -1819,6 +1873,92 @@ function startEdit(li,t){
   inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); finish(true); } else if(e.key==="Escape"){ e.preventDefault(); e.stopPropagation(); finish(false); } };
   inp.onblur=()=>finish(true);
   inp.addEventListener("pointerdown",e=>e.stopPropagation());
+}
+
+/* ============================================================
+   LISTA DE PRIORIDADES
+   Áreas ordenadas por importancia (1 = primero). Cada una tiene
+   su lista de a quién/qué atender, que se tilda y se limpia.
+   ============================================================ */
+function ensurePriorities(){
+  if(Array.isArray(state.priorities)) return;
+  const mk=t=>({id:newId(), title:t, items:[]});
+  state.priorities=[
+    mk("Follow-up hot list (leads calientes)"),
+    mk("Cobranza: seguimiento de cuotas"),
+    mk("Post-call: apoyo al closer"),
+    mk("Setting y triage")
+  ];
+  save();
+}
+function renderPriorities(){
+  ensurePriorities();
+  const host=document.getElementById("prList");
+  const P=state.priorities;
+  const focusAdd = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.padd : null;
+  host.innerHTML="";
+  P.forEach((p,pi)=>{
+    const done=p.items.filter(i=>i.done).length;
+    const card=document.createElement("div");
+    card.className="pr-card"+(pi===0?" top":"");
+    card.innerHTML=
+      '<div class="pr-head"><span class="pr-num">'+(pi+1)+'</span>'+
+        '<div class="pr-title" contenteditable="true" spellcheck="false" data-ph="Nombre de la prioridad">'+escapeHtml(p.title)+'</div>'+
+        (p.items.length? '<span class="pr-count">'+done+'/'+p.items.length+'</span>' : '')+
+        '<span class="pr-tools">'+
+          '<button class="icobtn" data-a="up" title="Subir prioridad"'+(pi===0?" disabled":"")+'>↑</button>'+
+          '<button class="icobtn" data-a="down" title="Bajar prioridad"'+(pi===P.length-1?" disabled":"")+'>↓</button>'+
+          '<button class="icobtn del" data-a="del" title="Eliminar prioridad">×</button>'+
+        '</span></div>'+
+      '<ul class="pr-items"></ul>'+
+      (done? '<button class="pr-clear">Quitar las hechas ('+done+')</button>' : '')+
+      '<div class="pr-add"><input data-padd="'+p.id+'" placeholder="+ a quién / qué (Enter)" autocomplete="off"></div>';
+    const ul=card.querySelector(".pr-items");
+    p.items.forEach(it=>{
+      const li=document.createElement("li");
+      li.className="pr-item"+(it.done?" done":"");
+      li.innerHTML='<div class="rcheck'+(it.done?" on":"")+'">'+CHECK_SVG+'</div><span class="txt">'+linkify(it.text)+'</span>'+
+        '<button class="pedit" title="Editar">✎</button><button class="pdel" title="Quitar">×</button>';
+      li.querySelector(".rcheck").onclick=()=>{ it.done=!it.done; save(); renderPriorities(); };
+      li.querySelector(".pdel").onclick=()=>{ p.items=p.items.filter(x=>x!==it); save(); renderPriorities(); };
+      const edit=()=>{
+        const span=li.querySelector(".txt"); if(!span) return;
+        const inp=document.createElement("input"); inp.value=it.text; span.replaceWith(inp);
+        li.querySelectorAll("button").forEach(b=>b.style.display="none");
+        inp.focus();
+        let fin=false;
+        const end=ok=>{ if(fin) return; fin=true; if(ok && inp.value.trim()){ it.text=inp.value.trim(); save(); } renderPriorities(); };
+        inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); end(true); } else if(e.key==="Escape"){ e.preventDefault(); e.stopPropagation(); end(false); } };
+        inp.onblur=()=>end(true);
+      };
+      li.querySelector(".pedit").onclick=edit;
+      li.querySelector(".txt").ondblclick=e=>{ if(!e.target.closest("a")) edit(); };
+      ul.appendChild(li);
+    });
+    const t=card.querySelector(".pr-title");
+    t.oninput=()=>{ p.title=t.textContent.replace(/\s+/g," ").trim(); save(); };
+    t.onpaste=e=>{ e.preventDefault(); document.execCommand("insertText",false,(e.clipboardData||window.clipboardData).getData("text").replace(/\s+/g," ")); };
+    t.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); t.blur(); } };
+    card.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{
+      const a=b.dataset.a;
+      if(a==="up") moveIn(P,pi,-1);
+      else if(a==="down") moveIn(P,pi,1);
+      else if(a==="del"){ if(p.items.length && !confirm('¿Eliminar la prioridad "'+(p.title||"sin nombre")+'" y su lista?')) return; P.splice(pi,1); }
+      save(); renderPriorities();
+    });
+    const cl=card.querySelector(".pr-clear");
+    if(cl) cl.onclick=()=>{ p.items=p.items.filter(i=>!i.done); save(); renderPriorities(); };
+    const add=card.querySelector(".pr-add input");
+    add.onkeydown=e=>{ if(e.key==="Enter" && add.value.trim()){ p.items.push({id:newId(), text:add.value.trim(), done:false}); save(); renderPriorities(); } };
+    host.appendChild(card);
+  });
+  const nc=document.createElement("div");
+  nc.className="pr-newcard";
+  nc.innerHTML='<input id="prNew" placeholder="+ Nueva prioridad (Enter)" autocomplete="off">';
+  const ni=nc.querySelector("input");
+  ni.onkeydown=e=>{ if(e.key==="Enter" && ni.value.trim()){ P.push({id:newId(), title:ni.value.trim(), items:[]}); save(); renderPriorities(); const x=document.getElementById("prNew"); if(x) x.focus(); } };
+  host.appendChild(nc);
+  if(focusAdd){ const f=host.querySelector('[data-padd="'+focusAdd+'"]'); if(f) f.focus(); }
 }
 
 /* ---------- Hoy ---------- */
