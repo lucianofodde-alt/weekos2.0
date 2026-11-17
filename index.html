@@ -194,6 +194,27 @@ body.is-resizing,body.is-resizing *{cursor:col-resize!important;user-select:none
 .daycard.droptarget{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,var(--panel))}
 body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none!important}
 .dayadd{margin-top:8px}
+.day-head{gap:6px}
+.dh-main{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:space-between;gap:6px;cursor:pointer;border-radius:6px}
+.dh-main:hover .day-num,.dh-main:hover .day-name{color:var(--accent)}
+.dfold{flex:0 0 auto;border:1px solid transparent;background:transparent;color:var(--faint);width:22px;height:22px;border-radius:6px;font-size:15px;line-height:1;padding:0;align-self:center}
+.dfold:hover{color:var(--ink);border-color:var(--line-2);background:var(--panel)}
+.daycard.focus{box-shadow:0 8px 26px -16px rgba(0,33,71,.45)}
+.daycard.collapsed{padding:12px 4px;align-items:center;cursor:pointer;gap:4px}
+.daycard.collapsed:hover{border-color:var(--line-2)}
+.daycard.collapsed .day-head{flex-direction:column-reverse;align-items:center;margin-bottom:4px;gap:8px}
+.daycard.collapsed .dh-main{flex-direction:column;align-items:center;gap:4px}
+.daycard.collapsed .tasklist{display:none}
+.dcount{font-size:11.5px;font-weight:600;color:var(--soft);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:2px 7px;white-space:nowrap}
+.dtoday{font-size:9px;letter-spacing:.1em;font-weight:700;color:var(--accent);text-transform:uppercase}
+.task .ttype{white-space:nowrap}
+.task .ttext{word-break:normal;overflow-wrap:break-word;min-width:0}
+.weekgrid .task .ttext{padding-right:0}
+.weekgrid .task .tedit,.weekgrid .task .trep,.weekgrid .task .tdel{background:var(--panel-2);border-radius:4px;padding:1px 3px}
+.weekgrid .task:not(:hover) .tedit,.weekgrid .task:not(:hover) .trep,.weekgrid .task:not(:hover) .tdel{pointer-events:none}
+.weekgrid .task.recur:not(:hover) .trep{opacity:0}
+.weekgrid .daycard:not(.focus) .tt-train{display:none}
+@media(hover:none){.weekgrid .task .ttext{padding-right:44px}.weekgrid .task:not(:hover) .tedit,.weekgrid .task:not(:hover) .trep,.weekgrid .task:not(:hover) .tdel{pointer-events:auto}.weekgrid .task.recur .trep{opacity:.55}}
 .dayadd input{width:100%;border:0;border-top:1px solid var(--line);background:transparent;font-size:12px;color:var(--ink);padding:8px 2px 2px;transition:border .16s}
 .dayadd input::placeholder{color:var(--faint)}
 .dayadd input:focus{border-color:var(--accent)}
@@ -589,7 +610,9 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
   .hb-axis .xlabels{grid-row:1}
   .hb-grid{gap:16px}
   .bv{display:none}
-  .weekgrid{grid-template-columns:repeat(2,1fr)}
+  .weekgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .daycard.collapsed{min-height:0;flex-direction:row;justify-content:space-between;padding:10px 12px}
+  .daycard.collapsed .day-head,.daycard.collapsed .dh-main{flex-direction:row;margin:0}
   .colresize{display:none}
   .wbgrid{grid-template-columns:repeat(2,1fr)}
   .weekrow-head .wkone{display:none}
@@ -684,6 +707,7 @@ input[type=date]:focus,input[type=month]:focus,input[type=number]:focus{border-c
         <p class="capture-hint">Toca <code>✎</code> o haz doble clic en una tarea para editarla.</p>
         <p class="capture-hint">Toca <code>↻</code> en una tarea para que se repita (todos los días, ciertos días de la semana, cada mes…).</p>
         <p class="capture-hint">Arrastra <code>⋮⋮</code> para ordenar por prioridad o mover a otro día.</p>
+        <p class="capture-hint">Toca el número de un día para verlo más grande; la flechita <code>‹</code> lo pliega. Los días pasados se pliegan solos.</p>
         <p class="capture-hint">Ajusta el ancho de los días con las barritas entre columnas (doble clic las iguala).</p>
       </div>
     </div>
@@ -1452,31 +1476,35 @@ function setResultText(wk,i,v){ ensureOne(wk); state.oneThing[wk].results[i].tex
    y menos al otro. Se guarda; doble clic vuelve a dejarlos iguales.
    ============================================================ */
 const MIN_DAY_W = 90;
-function applyDayWidths(){
-  const g=document.getElementById("weekGrid");
-  const w=state.dayWidths;
-  if(Array.isArray(w) && w.length===7 && w.every(x=>typeof x==="number" && x>0))
-    g.style.setProperty("--cols", w.map(x=>x.toFixed(3)+"fr").join(" "));
-  else g.style.removeProperty("--cols");
+const FOCUS_F = 1.9;
+/* Cada día tiene un peso (state.dayWidths, uno por día de la semana).
+   El día con foco multiplica su peso; los plegados miden 62px. */
+function dayW(i){ const w=state.dayWidths; return (Array.isArray(w) && w.length===7 && typeof w[i]==="number" && w[i]>0)? w[i] : 1; }
+function weekCols(days,foc){
+  return days.map((ds,i)=> isCollapsed(ds)? "62px" : "minmax(0,"+(dayW(i)*(ds===foc?FOCUS_F:1)).toFixed(3)+"fr)").join(" ");
 }
-function startResize(e,handle,i){
+function startResize(e,handle,i,days,foc){
   if(e.button!==undefined && e.button!==0) return;
   e.preventDefault(); e.stopPropagation();
   const grid=document.getElementById("weekGrid");
   const cards=[...grid.querySelectorAll(".daycard")];
-  const widths=cards.map(c=>c.getBoundingClientRect().width);
-  const pair=widths[i]+widths[i+1];
+  const px=cards.map(c=>c.getBoundingClientRect().width);
+  const f=k=> days[k]===foc? FOCUS_F : 1;
+  let sumP=0, sumE=0;
+  days.forEach((ds,k)=>{ if(!isCollapsed(ds)){ sumP+=px[k]; sumE+=dayW(k)*f(k); } });
+  const pxPerFr=sumP/sumE;
+  const pair=px[i]+px[i+1];
   const startX=e.clientX;
+  const base=[0,1,2,3,4,5,6].map(dayW);
   handle.classList.add("on");
   document.body.classList.add("is-resizing");
   try{ handle.setPointerCapture(e.pointerId); }catch(_){}
-  let cur=widths.slice();
   const move=ev=>{
-    const a=Math.max(MIN_DAY_W, Math.min(pair-MIN_DAY_W, widths[i]+(ev.clientX-startX)));
-    cur=widths.slice(); cur[i]=a; cur[i+1]=pair-a;
-    const avg=cur.reduce((x,y)=>x+y,0)/7;
-    state.dayWidths=cur.map(x=>x/avg);
-    applyDayWidths();
+    const a=Math.max(MIN_DAY_W, Math.min(pair-MIN_DAY_W, px[i]+(ev.clientX-startX)));
+    const w=base.slice();
+    w[i]=a/pxPerFr/f(i); w[i+1]=(pair-a)/pxPerFr/f(i+1);
+    state.dayWidths=w;
+    grid.style.setProperty("--cols", weekCols(days,foc));
   };
   const up=()=>{
     handle.removeEventListener("pointermove",move);
@@ -1490,40 +1518,82 @@ function startResize(e,handle,i){
   handle.addEventListener("pointerup",up);
   handle.addEventListener("pointercancel",up);
 }
-function resetDayWidths(){ delete state.dayWidths; save(); applyDayWidths(); toast("Días con el mismo ancho"); }
+function resetDayWidths(){ delete state.dayWidths; save(); renderSemana(); toast("Días con el ancho de siempre"); }
 
+/* ============================================================
+   VISTA DE LA SEMANA: foco y días plegados
+   - Hoy aparece grande (foco). Tocando el nombre/número de otro
+     día, el foco pasa a ese; tocando el mismo, todos quedan iguales.
+   - La flechita pliega o despliega un día. Los días pasados
+     aparecen plegados solos (salvo que los abras).
+   ============================================================ */
+let focusDay = "auto"; // "auto" = hoy · "none" = sin foco · o una fecha
+function isCollapsed(ds){
+  const c=state.dayCollapsed||{};
+  if(ds in c) return !!c[ds];
+  return ds < iso(today());
+}
+function setCollapsed(ds,val){
+  if(!state.dayCollapsed || typeof state.dayCollapsed!=="object") state.dayCollapsed={};
+  const def = ds < iso(today());
+  if(val===def) delete state.dayCollapsed[ds]; else state.dayCollapsed[ds]=val;
+  // limpiar fechas viejas para no acumular
+  const lim=iso(addDays(today(),-60));
+  Object.keys(state.dayCollapsed).forEach(k=>{ if(k<lim) delete state.dayCollapsed[k]; });
+  save();
+}
+function currentFocus(days){
+  if(focusDay==="none") return null;
+  if(focusDay==="auto"){ const td=iso(today()); return days.includes(td)? td : null; }
+  return days.includes(focusDay)? focusDay : null;
+}
 function renderWeekGrid(mon){
   const grid = document.getElementById("weekGrid");
   grid.innerHTML="";
-  applyDayWidths();
   const td = iso(today());
+  const days=[...Array(7)].map((_,i)=>iso(addDays(mon,i)));
+  const foc=currentFocus(days);
+  grid.style.setProperty("--cols", weekCols(days,foc));
   for(let i=0;i<7;i++){
     const d = addDays(mon,i);
     const ds = iso(d);
     const isToday = ds===td;
     const weekend = (d.getDay()===0||d.getDay()===6);
+    const col = isCollapsed(ds);
     const card = document.createElement("div");
-    card.className = "daycard"+(isToday?" today":"")+(weekend?" weekend":"")+(ds===rtDate?" rtsel":"");
+    card.className = "daycard"+(isToday?" today":"")+(weekend?" weekend":"")+(ds===rtDate?" rtsel":"")+(col?" collapsed":"")+(ds===foc && !col?" focus":"");
     const tks = tasksOn(ds);
     const rs = routineStats(ds);
     const rpct = rs.total? Math.round(rs.done/rs.total*100) : 0;
     const mini = rs.total
       ? '<button class="rt-mini'+(rs.done===rs.total?" full":"")+'" data-rt="'+ds+'" title="Ver rutina de este día">Rutina '+rs.done+'/'+rs.total+'<span class="mb"><i style="width:'+rpct+'%"></i></span></button>'
       : '';
+    const nDone=tks.filter(t=>t.done).length;
     card.innerHTML =
-      '<div class="day-head"><div><div class="day-name">'+DAYS_ES_SHORT[d.getDay()]+'</div></div>'+
+      '<div class="day-head">'+
+        '<div class="dh-main" title="'+(ds===foc?"Quitar el foco":"Ver este día más grande")+'"><div class="day-name">'+DAYS_ES_SHORT[d.getDay()]+'</div>'+
         '<div class="day-num">'+d.getDate()+'</div></div>'+
-      (isToday?'<div class="day-badge" style="margin:-6px 0 8px">Hoy</div>':'')+
-      mini+
+        '<button class="dfold" title="'+(col?"Mostrar las tareas de este día":"Plegar este día")+'">'+(col?"›":"‹")+'</button></div>'+
+      (col? '<div class="dcount" title="'+nDone+' hechas de '+tks.length+'">'+(tks.length? nDone+"/"+tks.length : "—")+'</div>'+(isToday?'<span class="dtoday">Hoy</span>':'') : '')+
+      (isToday && !col?'<div class="day-badge" style="margin:-6px 0 8px">Hoy</div>':'')+
+      (col? '' : mini)+
       '<ul class="tasklist" data-date="'+ds+'"></ul>'+
-      '<div class="dayadd"><input placeholder="+ agregar…" data-date="'+ds+'" autocomplete="off"></div>';
+      (col? '' : '<div class="dayadd"><input placeholder="+ agregar…" data-date="'+ds+'" autocomplete="off"></div>');
     const ul = card.querySelector(".tasklist");
     tks.forEach(t=>ul.appendChild(taskEl(t)));
-    if(i<6){
+    card.querySelector(".dfold").onclick=e=>{ e.stopPropagation(); setCollapsed(ds,!col); renderSemana(); };
+    card.querySelector(".dh-main").onclick=e=>{
+      e.stopPropagation();
+      if(col){ setCollapsed(ds,false); focusDay=ds; }
+      else focusDay = (ds===foc)? "none" : ds;
+      renderSemana();
+    };
+    if(col) card.onclick=()=>{ setCollapsed(ds,false); focusDay=ds; renderSemana(); };
+    if(i<6 && !col && !isCollapsed(days[i+1])){
       const h=document.createElement("div");
-      h.className="colresize"; h.dataset.i=i;
-      h.title="Arrastra para ensanchar o achicar · doble clic para igualar";
-      h.addEventListener("pointerdown",e=>startResize(e,h,i));
+      h.className="colresize";
+      h.title="Arrastra para ensanchar o achicar · doble clic para volver al ancho de siempre";
+      h.addEventListener("pointerdown",e=>startResize(e,h,i,days,foc));
       h.addEventListener("dblclick",resetDayWidths);
       card.appendChild(h);
     }
@@ -1875,7 +1945,7 @@ function taskEl(t){
   const tag = TYPE_LABEL[t.type] ? '<span class="ttype '+TYPE_CLASS[t.type]+'">'+TYPE_LABEL[t.type]+'</span>' : '';
   const rdesc = t.virtual? describeRepeat(t.series.repeat,t.series.date) : "";
   li.innerHTML =
-    (t.virtual? '<span class="tgrip" style="visibility:hidden">⋮⋮</span>' : '<span class="tgrip" title="Arrastrar para ordenar o mover de día">⋮⋮</span>')+
+    (t.virtual? '' : '<span class="tgrip" title="Arrastrar para ordenar o mover de día">⋮⋮</span>')+
     '<div class="tbox">'+CHECK_SVG+'</div>'+
     '<span class="ttext">'+(t.virtual?'<span class="rmark" title="'+escapeAttr(rdesc)+'">↻</span>':'')+tag+taskTextHtml(t)+'</span>'+
     '<button class="tedit" title="Editar">✎</button>'+
